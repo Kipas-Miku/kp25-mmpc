@@ -12,6 +12,9 @@ export default defineConfig({
     },    
     server: {
         port: 8000,
+  },
+  optimizeDeps: {
+    include: ['textalive-app-api'], 
   }
 
 })

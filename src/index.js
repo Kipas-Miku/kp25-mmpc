@@ -35,7 +35,7 @@ class Main
  _onAppReady (app) {
     if (!app.managed) {
       // ストリートライト / 加賀(ネギシャワーP)
-      player.createFromSongUrl("https://piapro.jp/t/ULcJ/20250205120202", {
+      this._player.createFromSongUrl("https://piapro.jp/t/ULcJ/20250205120202", {
         video: {
           // 音楽地図訂正履歴
           beatId: 4694275,

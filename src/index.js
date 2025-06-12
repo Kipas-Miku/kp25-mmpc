@@ -4,13 +4,13 @@ import { songs } from "../songs";
 
 
 // Variable
-const token = import.meta.env.VITE_TEXTALIVE_API_TOKEN;
+const token = 'sMxQv1t4xm4BLj1G';
 const songListEl = document.getElementById("song-list");
 const viewEl = document.getElementById("player-ui");
 const metaEl = document.getElementById("meta");
 
 // Main Class
-class App
+class Main
 {
     constructor() {
         this.router = new Router();
@@ -23,6 +23,7 @@ class App
         this.mainMenu();
         this.setupCredit();
         this.setupSongSelector();
+        this.setupLyricApp();
     }
 
     mainMenu() {
@@ -46,6 +47,10 @@ class App
         document.getElementById("ssReturnMenu").onclick = () => this.router.navigate("mainMenu");
     }
 
+    setupLyricApp(){
+        document.getElementById("lsReturnMenu").onclick = () => this.router.navigate("mainMenu");
+    }
+
     playSong(song) {
         this.router.navigate("player-ui");
         document.getElementById("loading").style.display = "flex";
@@ -57,15 +62,31 @@ class App
         });
     }
 
+    _onAppReady(){
+
+    }
+
     _onVideoReady (v)
     {
 
         document.getElementById("loading").style.display = "none";
         const song = this._player.data.song;
         metaEl.innerHTML = `<h2>${song.name}</h2><p>${song.artist.name}</p>`;
-        document.getElementById("lsReturnMenu").onclick = () => this.router.navigate("mainMenu");
     
     }
+
+    _onTimeUpdate(){
+
+    }
+}
+
+class App {
+    constructor() {
+
+    }
+
+
+
 }
 
 class Router
@@ -82,4 +103,4 @@ class Router
 
 
 
-new App();
+new Main();

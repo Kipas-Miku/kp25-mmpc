@@ -4,6 +4,11 @@
 }
 html,body {
     overflow: hidden;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    font-family: 'Press Start 2P', cursive;
+    background: black;
 }
 
 #view {
@@ -41,7 +46,6 @@ html,body {
     display: none;
 }
 
-
 #media {
     position: absolute;
     right: 10px;
@@ -54,3 +58,58 @@ html,body {
     width: 100% !important;
     height: initial !important;
 }
+
+#mainMenu {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .layer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center center;
+    }
+    .stars {
+      background-image: url('../assets/stars.jpg'); /* Your own picture */
+    }
+    .clouds {
+      background-image: url('../assets/clouds.png'); 
+      transform: translateZ(-100px);
+    }
+    .mountains {
+      background-image: url('../assets/mountains.png'); 
+      transform: translateZ(-50px);
+    }
+    .tower {
+      background-image: url('../assets/observation_tower.png'); 
+      transform: translateZ(100px);
+      background-repeat: no-repeat;
+      background-size:25%;
+      background-position: bottom right;
+    }
+    .gameMenu {
+      position: absolute;
+      left: 20px;
+      top: 100px;
+      width: 50%; height: 100%;
+      z-index: 100;
+    }
+    .gameMenu ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 20px;
+    }
+    .gameMenu ul li {
+      background: #fff4;
+      padding: 20px;
+      margin-bottom: 10px;
+      transition: background 0.5s ease;
+      cursor: pointer;
+    }
+    .gameMenu ul li:hover {
+      background: #fff8;
+      transform: translateX(20px);
+    }

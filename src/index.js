@@ -1,7 +1,15 @@
 // Libraries
 import { Player } from "textalive-app-api";
 import { songs } from "../songs";
+import Parallax from "parallax-js";
 
+var scene = document.getElementById('mainMenu');
+var parallaxInstance = new Parallax(scene,{
+    relativeInput: true,
+    invertX: true,
+    invertY: true,
+    hoverOnly: true,
+});
 
 // Variable
 const token = 'sMxQv1t4xm4BLj1G';
@@ -27,8 +35,11 @@ class Main
     }
 
     mainMenu() {
+
         document.getElementById("toSong").onclick = () => this.router.navigate("songSelector");
         document.getElementById("toCredit").onclick = () => this.router.navigate("creditView");
+
+
      }
 
     setupCredit(){

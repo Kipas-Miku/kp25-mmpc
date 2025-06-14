@@ -1,214 +1,117 @@
-// Variables
-const token = import.meta.env.VITE_TEXTALIVE_API_TOKEN;
+// Libraries
+import { Player } from "textalive-app-api";
+import { songs } from "../songs";
+import Parallax from "parallax-js";
 
-// import { Player } from "./node_modules/textalive-app-api";
-
-
-const { Player } = TextAliveApp;
-
-// TextAlive Player を作る
-const player = new Player({ 
-    app: { token: token },
-    mediaElement: document.querySelector("#media"),
-    mediaBannerPosition: "bottom right"
- });
-
-const overlay = document.querySelector("#overlay"); 
-const bar =  document.querySelector("#bar"); 
-const textContainer =  document.querySelector("#text"); 
-const seekbar =  document.querySelector("#seekbar"); 
-const paintedBar = seekbar.querySelector("#div"); 
-let b, c;
-
-
-player.addListener({
-    onAppReady: (app) => {
-        if (!app.managed) {
-            // showControls();
-        }else{
-            document.querySelector("#control").className = "disable";
-        }
-        if (!app.songUrl) {
-            document.querySelector("#media").className = " disable";
-            player.createFromSongUrl("https://piapro.jp/t/ULcJ/20250205120202");
-        }
-        
-    },
-    onAppMediaChange() {
-        overlay.ClassName = "";
-        bar.className = "";
-        resetChars();
-    },
-    //  Called when the video object is ready (when information about the music has been loaded)
-    onVideoReady: (v) => {
-        document.querySelector("#artist span").textContent = player.data.song.artist.name;
-        document.querySelector("#song span").textContent = player.data.song.name;
-
-        c = null;
-
-        // Set the “animate” function for each word called periodically
-        let w = player.video.firstWord;
-        while (w) {
-        w.animate = animateWord;
-        w = w.next;
-        }
-    },
-    onTimerReady: () => {
-        overlay.className = "disabled";
-        document.querySelector("#control > a#play").className = "";
-        document.querySelector("#control > a#stop").className = "";
-  
-    },
-    onPlay: () => {
-        const a = document.querySelector("#control > a#play");
-        while (a.firstChild) a.removeChild(a.firstChild);
-        a.appendChild(document.createTextNode("\uf28b"));
-    },
-    onPause: () => {
-        const a = document.querySelector("#control > a#play");
-        while (a.firstChild) a.removeChild(a.firstChild);
-        a.appendChild(document.createTextNode("\uf144"));
-    },
-    onStop: () => console.log("Play Stop"),
-    // onMediaSeek: (position) => console.log("Change playback position:", position, "ms"),
-    onTimeUpdate: (position) => {
-        paintedSeekbar.style.width = `${
-            parseInt((position * 1000) / player.video.duration) / 10
-        }%`;
-
-        // 現在のビート情報を取得
-        let beat = player.findBeat(position);
-        if (b !== beat) {
-        if (beat) {
-            requestAnimationFrame(() => {
-            bar.className = "active";
-            requestAnimationFrame(() => {
-                bar.className = "active beat";
-            });
-            });
-        }
-        b = beat;
-        }
-
-        // 歌詞情報がなければこれで処理を終わる
-        if (!player.video.firstChar) {
-        return;
-        }
-
-        // 巻き戻っていたら歌詞表示をリセットする
-        if (c && c.startTime > position + 1000) {
-        resetChars();
-        }
-
-        // 500ms先に発声される文字を取得
-        let current = c || player.video.firstChar;
-        while (current && current.startTime < position + 500) {
-        // 新しい文字が発声されようとしている
-        if (c !== current) {
-            newChar(current);
-            c = current;
-        }
-        current = current.next;
-    }
-},
-    // onThrottledTimeUpdate: (position) => console.log("Update playback position:", position, "ms"),
-
+var scene = document.getElementById('mainMenu');
+var parallaxInstance = new Parallax(scene,{
+    relativeInput: true,
+    invertX: true,
+    invertY: true,
+    hoverOnly: true,
 });
 
-// If a word is uttered, display it in #text
-const animateWord = function (now, unit) {
-  if (unit.contains(now)) {
-    document.querySelector("#text").textContent = unit.text;
-  }
-};
+// Variable
+const token = 'sMxQv1t4xm4BLj1G';
+const songListEl = document.getElementById("song-list");
+const viewEl = document.getElementById("player-ui");
+const metaEl = document.getElementById("meta");
 
-/* シークバー */
-seekbar.addEventListener("click", (e) => {
-  e.preventDefault();
-  if (player) {
-    player.requestMediaSeek(
-      (player.video.duration * e.offsetX) / seekbar.clientWidth
-    );
-  }
-  return false;
-});
+// Main Class
+class Main
+{
+    constructor() {
+        this.router = new Router();
+        this._player = new Player({
+            app:{
+                token: token
+            }
+        });
 
-/**
- * 新しい文字の発声時に呼ばれる
- * Called when a new character is being vocalized
- */
-function newChar(current) {
-  // 品詞 (part-of-speech)
-  // https://developer.textalive.jp/packages/textalive-app-api/interfaces/iword.html#pos
-  const classes = [];
-  if (
-    current.parent.pos === "N" ||
-    current.parent.pos === "PN" ||
-    current.parent.pos === "X"
-  ) {
-    classes.push("noun");
-  }
-
-  // フレーズの最後の文字か否か
-  if (current.parent.parent.lastChar === current) {
-    classes.push("lastChar");
-  }
-
-  // 英単語の最初か最後の文字か否か
-  if (current.parent.language === "en") {
-    if (current.parent.lastChar === current) {
-      classes.push("lastCharInEnglishWord");
-    } else if (current.parent.firstChar === current) {
-      classes.push("firstCharInEnglishWord");
+        this.mainMenu();
+        this.setupCredit();
+        this.setupSongSelector();
+        this.setupLyricApp();
     }
-  }
 
-  // noun, lastChar クラスを必要に応じて追加
-  const div = document.createElement("div");
-  div.appendChild(document.createTextNode(current.text));
+    mainMenu() {
 
-  // 文字を画面上に追加
-  const container = document.createElement("div");
-  container.className = classes.join(" ");
-  container.appendChild(div);
-  container.addEventListener("click", () => {
-    player.requestMediaSeek(current.startTime);
-  });
-  textContainer.appendChild(container);
+        document.getElementById("toSong").onclick = () => this.router.navigate("songSelector");
+        document.getElementById("toCredit").onclick = () => this.router.navigate("creditView");
+
+
+     }
+
+    setupCredit(){
+        document.getElementById("cdtReturnMenu").onclick = () => this.router.navigate("mainMenu");
+     }
+
+    setupSongSelector() {
+        const ul = document.getElementById("songList");
+        songs.forEach((song) => {
+            const li = document.createElement("li");
+            li.className = "list-group-item list-group-item-action text-dark";
+            li.textContent = `${song.title} / ${song.artist}`;
+            li.onclick = () => this.playSong(song);
+            ul.appendChild(li);
+        });
+        document.getElementById("ssReturnMenu").onclick = () => this.router.navigate("mainMenu");
+    }
+
+    setupLyricApp(){
+        document.getElementById("lsReturnMenu").onclick = () => this.router.navigate("mainMenu");
+    }
+
+    playSong(song) {
+        this.router.navigate("player-ui");
+        document.getElementById("loading").style.display = "flex";
+        this._player.createFromSongUrl(song.songUrl, { video: song.video });
+        this._player.addListener({
+            onAppReady: (app) => console.log("App ready", app),
+            onVideoReady: (v) => this._onVideoReady(v),
+            onTimeUpdate: (pos) => {/* update lyric UI here */}
+        });
+    }
+
+    _onAppReady(){
+
+    }
+
+    _onVideoReady (v)
+    {
+
+        document.getElementById("loading").style.display = "none";
+        const song = this._player.data.song;
+        metaEl.innerHTML = `<h2>${song.name}</h2><p>${song.artist.name}</p>`;
+    
+    }
+
+    _onTimeUpdate(){
+
+    }
 }
 
-/**
- * 歌詞表示をリセットする
- * Reset lyrics view
- */
-function resetChars() {
-  c = null;
-  while (textContainer.firstChild)
-    textContainer.removeChild(textContainer.firstChild);
+class App {
+    constructor() {
+
+    }
+
+
+
 }
 
-/* 再生・一時停止ボタン */
-document.querySelector("#control > a#play").addEventListener("click", (e) => {
-  e.preventDefault();
-  if (player) {
-    if (player.isPlaying) {
-      player.requestPause();
-    } else {
-      player.requestPlay();
+class Router
+{
+    constructor() {
+        this.views = document.querySelectorAll(".view");
     }
-  }
-  return false;
-});
+    navigate(viewId) {
+        this.views.forEach(view => view.classList.remove("active-view"));
+        document.getElementById(viewId).classList.add("active-view");
+    }
 
-/* 停止ボタン */
-document.querySelector("#control > a#stop").addEventListener("click", (e) => {
-  e.preventDefault();
-  if (player) {
-    player.requestStop();
+}
 
-    // 再生を停止したら画面表示をリセットする
-    bar.className = "";
-    resetChars();
-  }
-  return false;
-});
+
+
+new Main();

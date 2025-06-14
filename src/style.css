@@ -72,17 +72,17 @@ html,body {
       background-size: cover;
       background-position: center center;
     }
-    .stars {
-      background-image: url('../assets/stars.jpg'); /* Your own picture */
-    }
-    .clouds {
+    /* .stars {
+      background-image: url('../assets/stars.jpg'); 
+    } */
+    /* .clouds {
       background-image: url('../assets/clouds.png'); 
       transform: translateZ(-100px);
     }
     .mountains {
       background-image: url('../assets/mountains.png'); 
       transform: translateZ(-50px);
-    }
+    } */
     .tower {
       background-image: url('../assets/observation_tower.png'); 
       transform: translateZ(100px);

@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
     root: '.',
-    base: '/procon',
+    base: '/kp25-mmpc/',
     build: {
         outDir: 'dist',
         emptyOutDir: true,

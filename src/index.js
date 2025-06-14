@@ -1,5 +1,5 @@
 // Libraries
-import { Player } from "textalive-app-api";
+import { Player } from "https://unpkg.com/textalive-app-api@latest/dist/index.min.js";
 import { songs } from "../songs";
 import Parallax from "parallax-js";
 

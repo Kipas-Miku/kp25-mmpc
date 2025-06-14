@@ -3,6 +3,8 @@ import { Player } from "https://unpkg.com/textalive-app-api@latest/dist/index.mi
 import { songs } from "../songs";
 import Parallax from "parallax-js";
 
+
+
 var scene = document.getElementById('mainMenu');
 var parallaxInstance = new Parallax(scene,{
     relativeInput: true,
@@ -12,7 +14,7 @@ var parallaxInstance = new Parallax(scene,{
 });
 
 // Variable
-const token = 'sMxQv1t4xm4BLj1G';
+const API_TOKEN = import.meta.env.VITE_TEXTALIVE_API_TOKEN;
 const songListEl = document.getElementById("song-list");
 const viewEl = document.getElementById("player-ui");
 const metaEl = document.getElementById("meta");
@@ -24,7 +26,7 @@ class Main
         this.router = new Router();
         this._player = new Player({
             app:{
-                token: token
+                token: API_TOKEN
             }
         });
 

@@ -20,10 +20,12 @@
                 <li class="list-group-item" id="">Exit</li>
             </ul>
         </div>
-        <div data-depth="0.1" class="layer stars"></div>
-        <div data-depth="0.5" class="layer clouds"></div>
-        <div data-depth="0.3" class="layer mountains"></div>
-        <div data-depth="0.8" class="layer tower"></div>
+        <div id="paraBg">
+            <div data-depth="0.1" class="layer stars"></div>
+            <div data-depth="0.5" class="layer clouds"></div>
+            <div data-depth="0.3" class="layer mountains"></div>
+            <div data-depth="0.8" class="layer tower"></div>
+        </div>
     </div>
     <div id="songSelector" class="view">
         <div class="container d-flex flex-column p-2">
@@ -50,6 +52,14 @@
             <div id="view"></div>
             <div id="media"></div>
             <div id="meta"></div>
+            <div id="control">
+                <h4>Controls</h4>
+                <button id="playBtn" class="btn btn-primary m-2">Play</button>
+                <button id="pauseBtn" class="btn btn-warning m-2">Pause</button>
+                <button id="stopBtn" class="btn btn-danger m-2">Stop</button>
+
+                <input id="seekSlider" type="range" min="0" max="100" value="0" />
+            </div>
         </div>
     </div>
     

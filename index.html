@@ -10,7 +10,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 </head>
 <body class="bg-dark text-white">
+    <!-- Menu View -->
     <div id="mainMenu" class="view active-view text-center p-5">
+        <!-- Menu -->
         <div class="gameMenu">
             <h1>Star Gazing Procon</h1>
             <ul class="list-group">
@@ -20,6 +22,7 @@
                 <li class="list-group-item" id="">Exit</li>
             </ul>
         </div>
+        <!-- Background -->
         <div id="paraBg">
             <div data-depth="0.1" class="layer stars"></div>
             <div data-depth="0.5" class="layer clouds"></div>
@@ -27,6 +30,7 @@
             <div data-depth="0.8" class="layer tower"></div>
         </div>
     </div>
+    <!-- Song Selection View -->
     <div id="songSelector" class="view">
         <div class="container d-flex flex-column p-2">
             <h2>Song Selection</h2>
@@ -34,6 +38,7 @@
             <button id="ssReturnMenu" class="btn btn-warning">Back</button>
         </div>
     </div>
+    <!-- Credut View -->
     <div id="creditView" class="view text-center p-5">
         <h2>Credit</h2>
         <p>
@@ -43,27 +48,26 @@
         </p>
         <button id="cdtReturnMenu" class="btn btn-warning">Back</button>
     </div>
+    <!-- Lyrics App View -->
     <div id="player-ui" class="view">
         <div id="loading">
             <h1>Loading Song... Please wait <img src="assets/loader.gif" alt=""></h1>
         </div>
         <div>
-            <button id="lsReturnMenu" class="btn btn-warning">Back</button>
             <div id="view"></div>
             <div id="media"></div>
             <div id="meta"></div>
+            <button id="lsReturnMenu" class="btn btn-warning">Back</button>
             <div id="control">
                 <h4>Controls</h4>
-                <button id="playBtn" class="btn btn-primary m-2">Play</button>
-                <button id="pauseBtn" class="btn btn-warning m-2">Pause</button>
-                <button id="stopBtn" class="btn btn-danger m-2">Stop</button>
+                <button id="bt_play" class="btn btn-primary m-2">Play</button>
+                <button id="bt_pause" class="btn btn-warning m-2" style="display: none;">Pause</button>
+                <button id="bt_rewind" class="btn btn-danger m-2">Stop</button>
 
                 <input id="seekSlider" type="range" min="0" max="100" value="0" />
             </div>
         </div>
     </div>
-    
-
     
     <!-- Scripts -->
     <script src="./src/index.js" type="module"></script>

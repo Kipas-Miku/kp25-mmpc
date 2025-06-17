@@ -4,3 +4,4 @@ dist
 package-lock.json
 tumb.jpg
 meta.json
+/src/old

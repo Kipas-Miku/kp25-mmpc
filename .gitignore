@@ -1,1 +1,7 @@
-# /src/old/back
+.env
+dist
+/node_modules
+package-lock.json
+tumb.jpg
+meta.json
+/src/old

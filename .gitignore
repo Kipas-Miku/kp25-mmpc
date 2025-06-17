@@ -1,6 +1,9 @@
 .env
+dist
 /node_modules
 package-lock.json
+tumb.jpg
 meta.json
-dist
+/src/old
+meta.json
 tumb.*

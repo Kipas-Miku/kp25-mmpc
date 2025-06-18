@@ -54,17 +54,24 @@
             <h1>Loading Song... Please wait <img src="assets/loader.gif" alt=""></h1>
         </div>
         <div>
-            <div id="view"></div>
+            <div id="view">
+                <div id="lyricPlayer" class="lyric-line container text-center"></div>
+            </div>
             <div id="media"></div>
-            <div id="meta"></div>
-            <button id="lsReturnMenu" class="btn btn-warning">Back</button>
+            <div id="meta">
+                <div class="song-detail">
+                    <h2 id="title"></h2>
+                    <p id="artist"></p>
+                </div>
+            </div>
             <div id="control">
                 <h4>Controls</h4>
                 <button id="bt_play" class="btn btn-primary m-2">Play</button>
                 <button id="bt_pause" class="btn btn-warning m-2" style="display: none;">Pause</button>
                 <button id="bt_rewind" class="btn btn-danger m-2">Stop</button>
+                <button id="lsReturnMenu" class="btn btn-warning">Back</button>
 
-                <input id="seekSlider" type="range" min="0" max="100" value="0" />
+                <!-- <input id="volSlider" type="range" min="0" max="100" value="0" /> -->
             </div>
         </div>
     </div>

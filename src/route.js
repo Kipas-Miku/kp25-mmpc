@@ -1,4 +1,4 @@
-import { songs } from "../songs";
+import { songs } from "../assets/songs";
 import { PlayerManager } from "./playerManager";
 
 export class Router

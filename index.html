@@ -54,8 +54,12 @@
             <h1>Loading Song... Please wait <img src="assets/loader.gif" alt=""></h1>
         </div>
         <div>
+            <div id="seekbar">
+                <div></div>
+            </div>
             <div id="view">
-                <div id="lyricPlayer" class="lyric-line container text-center"></div>
+                <canvas id="lyricsCanvas"></canvas>
+                <!-- <div id="lyricPlayer" class="lyric-line container text-center"></div> -->
             </div>
             <div id="media"></div>
             <div id="meta">
@@ -70,6 +74,10 @@
                 <button id="bt_pause" class="btn btn-warning m-2" style="display: none;">Pause</button>
                 <button id="bt_rewind" class="btn btn-danger m-2">Stop</button>
                 <button id="lsReturnMenu" class="btn btn-warning">Back</button>
+                <button id="moveLeft" class="btn btn-light">←</button>
+                <button id="moveRight" class="btn btn-light">→</button>
+                <button id="moveUp" class="btn btn-light">↑</button>
+                <button id="moveDown" class="btn btn-light">↓</button>
 
                 <!-- <input id="volSlider" type="range" min="0" max="100" value="0" /> -->
             </div>

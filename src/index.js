@@ -1,4 +1,4 @@
-import { Router } from "./route.js";
+import { Router } from "./router.js";
 import Parallax from "parallax-js";
 
 

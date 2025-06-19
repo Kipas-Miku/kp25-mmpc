@@ -1,12 +1,17 @@
 import { Player,stringToDataUrl } from "textalive-app-api";
+import { CanvasManager } from "./canvasManager";
 
 const API_TOKEN = import.meta.env.VITE_TEXTALIVE_API_TOKEN;
 
 const volEl = document.getElementById("volSlider");
 const titleEl = document.getElementById("title");
 const artistEl = document.getElementById("artist");
-const lyricEl = document.getElementById('lyricPlayer');
+const lyricEl = document.getElementById('lyricsCanvas');
 const viewEl = document.getElementById('view');
+const seekbar = document.querySelector("#seekbar");
+const paintedSeekbar = seekbar.querySelector("div");
+
+let lastTime = -1;
 
 export class PlayerManager 
 {
@@ -49,7 +54,11 @@ export class PlayerManager
             },
             mediaElement:document.getElementById("media")
         });
-
+        this.canvasMan = new CanvasManager("lyricsCanvas",[
+            "assets/planet.jpeg",
+            "assets/planet2.png",
+            "assets/planet3.png"
+        ]);
         this.lastBeatIndex = -1;
         document.getElementById("loading").style.display = "flex";
 
@@ -75,7 +84,7 @@ export class PlayerManager
 
     _onAppReady(app)
     {
-        console.log("app:", app);
+        // console.log("app:", app);
         
         if (! app.managed)
         {
@@ -98,6 +107,49 @@ export class PlayerManager
         const song = this._player.data.song;
         titleEl.innerHTML = `<span class='fs-6'>Observation </span>- ${song.name}`;
         artistEl.innerHTML = `${song.artist.name}`;
+
+        document.getElementById("moveLeft").onclick = () => this.canvasMan.move(-10, 0);
+        document.getElementById("moveRight").onclick = () => this.canvasMan.move(10, 0);
+        document.getElementById("moveUp").onclick = () => this.canvasMan.move(0, -10);
+        document.getElementById("moveDown").onclick = () => this.canvasMan.move(0, 10);
+        document.addEventListener("keydown", (e) => {
+              switch (e.code) {
+                case "ArrowUp":
+                case "KeyW":
+                    console.log("Move Up");
+                    this.canvasMan.move(0, -10);
+                    break;
+                case "ArrowDown":
+                case "KeyS":
+                    console.log("Move Down");
+                    this.canvasMan.move(0, 10);
+                    break;
+                case "ArrowLeft":
+                case "KeyA":
+                    console.log("Move Left");
+                    this.canvasMan.move(-10, 0);
+                    break;
+                case "ArrowRight":
+                case "KeyD":
+                    console.log("Move Right");  
+                    this.canvasMan.move(10, 0);
+                    break;
+                case "Space":
+                    console.log("Pause or Jump");
+                    if (this._player.isPlaying){
+                        this._player.requestPause()
+                    }else{
+                        this._player.requestPlay()
+                    }
+                    break;
+                case "Escape":
+                    console.log("Cancel or Exit");
+                    break;
+            }
+            console.log("Key pressed:", event.key);       // Human-readable name, e.g., "a", "Enter"
+            console.log("Key code:", event.code);         // Physical key on keyboard, e.g., "KeyA", "Enter"
+            console.log("Is Ctrl pressed?", event.ctrlKey);
+        });
     }
 
     _controlChange (playing)
@@ -135,23 +187,43 @@ export class PlayerManager
     }
     _onTimeUpdate (position)
     {
-        // console.log("update",position)
+        paintedSeekbar.style.width = `${
+            parseInt((position * 1000) / this._player.video.duration) / 10
+        }%`;
         
+
+        const beats = this._player.findBeatChange(lastTime, position);
+        console.log(beats)
+        if(beats) {
+            for (let i = this.lastTime + 1; 1< beats.length; i++) {
+                this.lastTime = 1;
+                this.spawnStar();
+            }
+        }
+
         const char = this._player.video.findChar(position);
         if (char && char.parent) {
             // console.log(char.parent.text);
-            lyricEl.innerHTML = `<h2>${char.parent.text}</h2>`;
+            this.canvasMan.updateLyric(char.parent.text);
+            // lyricEl.innerHTML = `<h2>${char.parent.text}</h2>`;
         }
 
-        const beats = this._player.findBeat(position);
-        console.log(beats);
-        if(beats) {
-            for (let i = this.lastBeatIndex + 1; 1< beats.length; i++) {
-                this.lastBeatIndex = 1;
-                this.spawnStar();
-
+        seekbar.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (this._player) {
+                this._player.requestMediaSeek(
+                (this._player.video.duration * e.offsetX) / seekbar.clientWidth
+                );
             }
+            e.preventDefault();
+        if (this._player) {
+            this._player.requestMediaSeek(
+            (this._player.video.duration * e.offsetX) / seekbar.clientWidth
+            );
         }
+            return false;
+        return false;
+        });
 
     }
     _onThrottledTimeUpdate (position)
@@ -173,12 +245,16 @@ export class PlayerManager
     }
 
     spawnStar() {
+        console.log("start")
         const star = document.createElement("div");
+        
+        star.parentElement
+        star.position = "relative";
         star.className = "star";
         star.style.left = `${Math.random() * window.innerWidth}px`;
         star.style.top = `${Math.random() * window.innerHeight}px`;
-        viewEl.appendChild(star);
-        setTimeout(() => document.body.removeChild(star), 500);
+        lyricEl.appendChild(star);
+        setTimeout(() => lyricEl.removeChild(star), 500);
       }
     
 }

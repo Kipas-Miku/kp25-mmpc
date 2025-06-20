@@ -1,3 +1,13 @@
+/* TODO
+- Seperate the TextAlive API APP as its own Class file
+- Add A lyric log and activity log
+- Create window overlay for the app to make it more astrology like app
+
+
+- Optional
+    + Add a setting to set which kind of fact or space body to see
+*/ 
+
 import { Player,stringToDataUrl } from "textalive-app-api";
 import { CanvasManager } from "./canvasManager";
 
@@ -10,6 +20,7 @@ const lyricEl = document.getElementById('lyricsCanvas');
 const viewEl = document.getElementById('view');
 const seekbar = document.querySelector("#seekbar");
 const paintedSeekbar = seekbar.querySelector("div");
+const bar = document.querySelector("#bar");
 
 let lastTime = -1;
 
@@ -146,9 +157,9 @@ export class PlayerManager
                     console.log("Cancel or Exit");
                     break;
             }
-            console.log("Key pressed:", event.key);       // Human-readable name, e.g., "a", "Enter"
-            console.log("Key code:", event.code);         // Physical key on keyboard, e.g., "KeyA", "Enter"
-            console.log("Is Ctrl pressed?", event.ctrlKey);
+            console.log("Key pressed:", e.key);       // Human-readable name, e.g., "a", "Enter"
+            console.log("Key code:", e.code);         // Physical key on keyboard, e.g., "KeyA", "Enter"
+            console.log("Is Ctrl pressed?", e.ctrlKey);
         });
     }
 
@@ -179,6 +190,9 @@ export class PlayerManager
     _onStop ()
     {
         this._controlChange(false);
+        if (this_player) {
+            bar.className = "";
+        }
         // console.log("stop");
     }
     _onMediaSeek (position)
@@ -187,26 +201,10 @@ export class PlayerManager
     }
     _onTimeUpdate (position)
     {
+        // Seekbar
         paintedSeekbar.style.width = `${
             parseInt((position * 1000) / this._player.video.duration) / 10
         }%`;
-        
-
-        const beats = this._player.findBeatChange(lastTime, position);
-        console.log(beats)
-        if(beats) {
-            for (let i = this.lastTime + 1; 1< beats.length; i++) {
-                this.lastTime = 1;
-                this.spawnStar();
-            }
-        }
-
-        const char = this._player.video.findChar(position);
-        if (char && char.parent) {
-            // console.log(char.parent.text);
-            this.canvasMan.updateLyric(char.parent.text);
-            // lyricEl.innerHTML = `<h2>${char.parent.text}</h2>`;
-        }
 
         seekbar.addEventListener("click", (e) => {
             e.preventDefault();
@@ -222,8 +220,35 @@ export class PlayerManager
             );
         }
             return false;
-        return false;
         });
+
+        // Beat bar
+        const beats = this._player.findBeatChange(lastTime, position);
+        if(
+            lastTime >= 0 &&
+            beats.entered.length
+        ) {
+            requestAnimationFrame(() => {
+                bar.className = "active";
+                requestAnimationFrame(() => {
+                    bar.className = "active beat";
+                })
+                this.spawnStar();
+            })
+            // for (let i = this.lastTime + 1; 1< beats.length; i++) {
+            //     this.lastTime = 1;
+            // }
+        }
+
+        // Lyrics Generation
+        const char = this._player.video.findChar(position);
+        if (char && char.parent) {
+            // console.log(char.parent.text);
+            this.canvasMan.updateLyric(char.parent.text);
+            // lyricEl.innerHTML = `<h2>${char.parent.text}</h2>`;
+        }
+
+        lastTime = position;
 
     }
     _onThrottledTimeUpdate (position)
@@ -234,6 +259,7 @@ export class PlayerManager
     {
         this._player.requestMediaSeek(0);
         this._player.requestPause();
+        const bar = document.querySelector("#bar");
     }
 
     _onVolumeUpdate(volume){
@@ -244,17 +270,19 @@ export class PlayerManager
         this._player.dispose();
     }
 
+
+    // Insert this in the canvas manager
+
     spawnStar() {
         console.log("start")
         const star = document.createElement("div");
         
-        star.parentElement
-        star.position = "relative";
+        star.position = "absolute";
         star.className = "star";
         star.style.left = `${Math.random() * window.innerWidth}px`;
         star.style.top = `${Math.random() * window.innerHeight}px`;
-        lyricEl.appendChild(star);
-        setTimeout(() => lyricEl.removeChild(star), 500);
+        viewEl.appendChild(star);
+        setTimeout(() => viewEl.removeChild(star), 500);
       }
     
 }

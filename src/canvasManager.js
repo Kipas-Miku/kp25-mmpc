@@ -1,3 +1,17 @@
+/* ToDo
+- Increase the resolution
+- Add the blinking stars
+    + Randomize the size and the durantion
+    Add a colour transition to make it nice
+- Add a smooth transformation movement
+- Add a create and delete module for the class
+    + Create a json file of all the info
+    + Create a randomize set of item in a scene
+    + Add an onClick event that will reveal a info on a constellation
+- Add an initail blur effect for the player
+- Display the lyrics on line at a time
+ */
+
 export class CanvasManager {
     constructor(canvasId, imageList) {
         this.canvas = document.getElementById(canvasId);

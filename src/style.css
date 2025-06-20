@@ -195,3 +195,50 @@ canvas#lyricsCanvas {
   50% {opacity: 1; transform: scale(1.5);}
   100% {opacity: 0; transform: scale(0.5);}
 }
+
+/**
+ * ビート情報が取れるようになったらビートバーを表示
+ * Show beat bar when beat information becomes available
+ */
+@keyframes activateBeatBar {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+/**
+ * ビート毎に右に広げてフェードアウト
+ * Make beat bar span to the right and then fade out
+ */
+@keyframes showBeatBar {
+  0% {
+    width: 0;
+    opacity: 1;
+  }
+  50% {
+    width: 100%;
+    opacity: 1;
+  }
+  100% {
+    width: 100%;
+    opacity: 0;
+  }
+}
+
+
+/* ビートバー / Beat bar */
+#bar {
+  opacity: 0;
+  height: 3px;
+  background: rgb(255 222 193);
+}
+#bar.active {
+  animation: activateBeatBar 0.3s;
+}
+#bar.beat {
+  animation: showBeatBar 0.5s;
+}

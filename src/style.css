@@ -87,7 +87,7 @@ canvas#lyricsCanvas {
     position: absolute;
     right: 10px;
     bottom: 10px;
-    z-index: 2;
+    z-index: 25;
     width: calc(80px + 16vmin);
 }
 #media > div > div.textalive-app-api-banner {

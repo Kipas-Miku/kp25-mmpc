@@ -26,9 +26,13 @@ export class MenuUI {
     const bgElement = document.createElement("div");
     bgElement.id = "paraBg";
     bgElement.innerHTML = `
-      <div data-depth="0.1" class="layer stars"></div>
+      <div data-depth="0.1" class="layer sky"></div>
+      <div data-depth="0.5" class="layer clouds"></div>
+      <div data-depth="0.5" class="layer clouds"></div>
       <div data-depth="0.5" class="layer clouds"></div>
       <div data-depth="0.3" class="layer mountains"></div>
+      <div data-depth="0.3" class="layer mountain_bg"></div>
+      <div data-depth="0.8" class="layer tower"></div>
       <div data-depth="0.8" class="layer tower"></div>
     `;
 

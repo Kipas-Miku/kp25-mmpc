@@ -115,19 +115,26 @@ canvas#lyricsCanvas {
   background-size: cover;
   background-position: center center;
 }
-/* .stars {
-  background-image: url('../assets/stars.jpg'); 
-} */
-/* .clouds {
-  background-image: url('../assets/clouds.png'); 
+.stars {
+  background-image: url('../assets/Bg/stars.jpg'); 
+}
+.sky {
+  background-image: url('../assets/Bg/Sky.png'); 
+}
+.clouds {
+  background-image: url('../assets/Bg/clouds.png'); 
   transform: translateZ(-100px);
 }
 .mountains {
-  background-image: url('../assets/mountains.png'); 
+  background-image: url('../assets/Bg/Mountain_1.png'); 
   transform: translateZ(-50px);
-} */
+}
+.mountain_bg {
+  background-image: url('../assets/Bg/Mountain_2.png'); 
+  transform: translateZ(-50px);
+}
 .tower {
-  background-image: url('../assets/observation_tower.png'); 
+  background-image: url('../assets/Bg/observation_tower.png'); 
   transform: translateZ(100px);
   background-repeat: no-repeat;
   background-size:25%;

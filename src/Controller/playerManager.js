@@ -29,7 +29,7 @@ export class PlayerManager
     constructor(song){
         this._player = new Player({
             app:{
-                token: API_TOKEN,
+                token: 'sMxQv1t4xm4BLj1G',
                 parameters: [
                 {
                     title: "フォントサイズ",
@@ -188,7 +188,7 @@ export class PlayerManager
     _onStop ()
     {
         this._controlChange(false);
-        if (this_player) {
+        if (this._player) {
             bar.className = "";
         }
         // console.log("stop");
@@ -231,7 +231,8 @@ export class PlayerManager
                 requestAnimationFrame(() => {
                     bar.className = "active beat";
                 })
-                this.spawnStar();
+                this.canvasMan.triggerBeat();
+                // this.spawnStar();
             })
             // for (let i = this.lastTime + 1; 1< beats.length; i++) {
             //     this.lastTime = 1;
@@ -266,21 +267,22 @@ export class PlayerManager
        
     destroy(){
         this._player.dispose();
+        this.canvasMan.destroy();
     }
 
 
     // Insert this in the canvas manager
 
-    spawnStar() {
-        console.log("start")
-        const star = document.createElement("div");
+    // spawnStar() {
+    //     console.log("start")
+    //     const star = document.createElement("div");
         
-        star.position = "absolute";
-        star.className = "star";
-        star.style.left = `${Math.random() * window.innerWidth}px`;
-        star.style.top = `${Math.random() * window.innerHeight}px`;
-        viewEl.appendChild(star);
-        setTimeout(() => viewEl.removeChild(star), 500);
-      }
+    //     star.position = "absolute";
+    //     star.className = "star";
+    //     star.style.left = `${Math.random() * window.innerWidth}px`;
+    //     star.style.top = `${Math.random() * window.innerHeight}px`;
+    //     viewEl.appendChild(star);
+    //     setTimeout(() => viewEl.removeChild(star), 500);
+    //   }
     
 }

@@ -11,7 +11,7 @@
 </head>
 <body class="bg-dark text-white">
     <!-- Menu View -->
-    <!-- <div id="mainMenu" class="view active-view text-center p-5">
+    <div id="mainMenu" class="view active-view text-center">
         
         <div class="gameMenu">
             <h1>Star Gazing Procon</h1>
@@ -23,12 +23,21 @@
             </ul>
         </div>
         <div id="paraBg">
-            <div data-depth="0.1" class="layer stars"></div>
-            <div data-depth="0.5" class="layer clouds"></div>
-            <div data-depth="0.3" class="layer mountains"></div>
-            <div data-depth="0.8" class="layer tower"></div>
+            <div class="layer sky"></div>
+            <!-- <div data-depth="0.3" class="layer cloud_1"></div> -->
+            <!-- <div data-depth="0.4" class="layer cloud_2"></div>
+            <div data-depth="0.5" class="layer cloud_3"></div> -->  
+            <div data-depth="0.2" class="layer stars"></div>
+
+            <div data-depth="0.7" class="layer shoot_star"></div>
+
+            <div data-depth="0.3" class="layer mountain_bg" data-depth-y="-0.30"></div>
+
+            <div data-depth="1.4" class="layer mountains" data-depth-y="-0.30"></div>
+
+            <div data-depth="4.0" class="layer tower" data-depth-y="-0.10"></div>
         </div>
-    </div> -->
+    </div>
     <!-- Song Selection View -->
     <div id="songSelector" class="view">
         <div class="container d-flex flex-column p-2">

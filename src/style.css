@@ -115,23 +115,42 @@ canvas#lyricsCanvas {
   background-size: cover;
   background-position: center center;
 }
+/* .layer.shoot_star {
+  animation: swing 3s ease-in-out infinite;
+  transform-origin: center center;
+}
+
+@keyframes swing {
+  0%   { transform: rotate(0deg); }
+  50%  { transform: rotate(5deg); }
+  100% { transform: rotate(0deg); }
+} */
 .stars {
-  background-image: url('../assets/Bg/stars.jpg'); 
+  background-image: url('../assets/Bg/Stars.png'); 
+}
+.shoot_star {
+  background-image: url('../assets/Bg/Shooting_Star.png'); 
 }
 .sky {
   background-image: url('../assets/Bg/Sky.png'); 
 }
-.clouds {
-  background-image: url('../assets/Bg/clouds.png'); 
-  transform: translateZ(-100px);
+.cloud_1 {
+  background-image: url('../assets/Bg/Clouds_1.png'); 
+  
+}.cloud_2{
+  background-image: url('../assets/Bg/Clouds_2.png'); 
+  
+}.cloud_3{
+  background-image: url('../assets/Bg/Clouds_3.png'); 
+  
 }
 .mountains {
   background-image: url('../assets/Bg/Mountain_1.png'); 
-  transform: translateZ(-50px);
+  
 }
 .mountain_bg {
   background-image: url('../assets/Bg/Mountain_2.png'); 
-  transform: translateZ(-50px);
+  
 }
 .tower {
   background-image: url('../assets/Bg/observation_tower.png'); 

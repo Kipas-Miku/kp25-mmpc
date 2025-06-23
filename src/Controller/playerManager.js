@@ -67,8 +67,6 @@ export class PlayerManager
         });
         this.canvasMan = new CanvasManager("lyricsCanvas",[
             "assets/planet.jpeg",
-            "assets/planet2.png",
-            "assets/planet3.png"
         ]);
         this.lastBeatIndex = -1;
         document.getElementById("loading").style.display = "flex";

@@ -16,24 +16,24 @@
 import p5 from "p5";
 import { Star } from "../Model/Stars";
 import { Lyric } from "../Model/Lyric";
+import { Player } from "textalive-app-api";
 
 export class CanvasManager {
-    constructor(canvasId, imageList = []) {
+    constructor(canvasId) {
         this.canvas = document.getElementById(canvasId);
-        // this.ctx = this.canvas.getContext("2d");
-        this.images = imageList;
+        // this.images = imageList;
         this.currentImage = null;
-        // this.lyric = "";
         this.x = 1920;
         this.y = 1080;
         this.stars = [];
-        this.currentLyric = null;
-        this.lyrics = [];
+        // this.currentLyric = null;
+        // this.lyrics = [];
+        this.activeLyric = null;
 
         this.p = new p5((sketch) => this.sketch(sketch));
     }
 
-
+    // main class initializer
     sketch(p) {
         this.p = p;
 
@@ -54,21 +54,30 @@ export class CanvasManager {
             }
 
             // Fade in current lyric
-            if (this.currentLyric) {
-                if (this.lyricAlpha < 255) this.lyricAlpha += 5;
+            // if (this.currentLyric) {
+            //     if (this.lyricAlpha < 255) this.lyricAlpha += 5;
 
-                this.p.fill(255, this.lyricAlpha);
-                this.p.textAlign(this.p.CENTER);
-                this.p.textSize(48);
-                this.p.text(this.currentLyric, this.lyricPos.x, this.lyricPos.y);
+            //     this.p.fill(255, this.lyricAlpha);
+            //     this.p.textAlign(this.p.CENTER);
+            //     this.p.textSize(48);
+            //     this.p.text(this.currentLyric, this.lyricPos.x, this.lyricPos.y);
+            // }
+
+            // for (let i = this.lyrics.length - 1; i >= 0; i--) {
+            //     const lyric = this.lyrics[i];
+            //     lyric.update();
+            //     lyric.draw(this.p);
+
+            //     if (lyric.isDead) this.lyrics.splice(i, 1);
+            // }
+
+            if (this.activeLyric) {
+            this.activeLyric.update(Player.currentTime); // Pass player time
+            this.activeLyric.draw(this.p);
+
+            if (this.activeLyric.isDead) {
+                this.activeLyric = null;
             }
-
-            for (let i = this.lyrics.length - 1; i >= 0; i--) {
-                const lyric = this.lyrics[i];
-                lyric.update();
-                lyric.draw(this.p);
-
-                if (lyric.isDead) this.lyrics.splice(i, 1);
             }
 
             // Star animation
@@ -81,6 +90,56 @@ export class CanvasManager {
         };
 
     }
+
+
+    // LYRICS METHODS
+    setLyrics(data) {
+        const centerX = this.p.width / 2;
+        const centerY = this.p.height / 2;
+
+        // Only switch if it's a new line
+        if (!this.activeLyric || this.activeLyric.text !== data.text) {
+            this.activeLyric = new Lyric(data, centerX, centerY);
+        }
+    }
+
+    updateLyric(text) {
+        this.lyrics.forEach(lyric => lyric.fadeOut());
+        const jitter = () => this.p.random(-50, 50);
+        const x = this.p.width / 2 + jitter();
+        const y = this.p.height / 2 + jitter();
+
+        this.lyrics.push(new Lyric(text, x, y));
+    }
+
+    // EXPLORE FUNCTION
+    move(dx, dy) {
+        this.x += dx;
+        this.y += dy;
+        this.p._draw();
+    }
+
+    // BACKDROP FUNCTION
+    gradBg(p){
+        const topHue = (p.frameCount * 0.1) %360;
+        const bottomHue = (topHue + 60) %360;
+
+        const topColor = p.color(`hsb(${topHue},80%,10%)`);
+        const bottomColor = p.color(`hsb(${bottomHue},90%,5%)`);
+
+        for(let y=0; y < p.height;y++) {
+            const inter = y /p.height;
+            const c = p.lerpColor(topColor,bottomColor,inter);
+            p.stroke(c);
+            p.line(0,y,p.width,y);
+        }
+    }
+
+    // STAR
+    triggerBeat() {
+        this.stars.push(new Star(this.p.random(this.p.width), this.p.random(this.p.height))); 
+    }
+    // IMAGES
     // async loadImages(){
     //     const promises = this.images.map(
     //         (url) =>
@@ -100,46 +159,6 @@ export class CanvasManager {
     //     };
     //     img.src = url;
     // }
-
-    setLyrics(lyrics) {
-        this._lyrics = lyrics;
-    }
-
-    updateLyric(text) {
-        this.lyrics.forEach(lyric => lyric.fadeOut());
-        const jitter = () => this.p.random(-50, 50);
-        const x = this.p.width / 2 + jitter();
-        const y = this.p.height / 2 + jitter();
-
-        this.lyrics.push(new Lyric(text, x, y));
-    }
-
-    move(dx, dy) {
-        this.x += dx;
-        this.y += dy;
-        this.p._draw();
-    }
-
-    gradBg(p){
-        const topHue = (p.frameCount * 0.1) %360;
-        const bottomHue = (topHue + 60) %360;
-
-        const topColor = p.color(`hsb(${topHue},80%,10%)`);
-        const bottomColor = p.color(`hsb(${bottomHue},90%,5%)`);
-
-        for(let y=0; y < p.height;y++) {
-            const inter = y /p.height;
-            const c = p.lerpColor(topColor,bottomColor,inter);
-            p.stroke(c);
-            p.line(0,y,p.width,y);
-        }
-    }
-
-    triggerBeat() {
-        for (let i = 0; i< 10; i++){
-            this.stars.push(new Star(this.p.random(this.p.width), this.p.random(this.p.height))); 
-        }
-    }
 
     destroy() {
         if (this.p) {

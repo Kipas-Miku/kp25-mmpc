@@ -21,6 +21,7 @@ const viewEl = document.getElementById('view');
 const seekbar = document.querySelector("#seekbar");
 const paintedSeekbar = seekbar.querySelector("div");
 const bar = document.querySelector("#bar");
+const numChars = 10;
 
 let lastTime = -1;
 
@@ -30,6 +31,7 @@ export class PlayerManager
         this._player = new Player({
             app:{
                 token: 'sMxQv1t4xm4BLj1G',
+                // review later on
                 parameters: [
                 {
                     title: "フォントサイズ",
@@ -65,32 +67,28 @@ export class PlayerManager
             },
             mediaElement:document.getElementById("media")
         });
-        this.canvasMan = new CanvasManager("lyricsCanvas",[
-            "assets/planet.jpeg",
-        ]);
+        this.canvasMan = new CanvasManager("lyricsCanvas");
         this.lastBeatIndex = -1;
-        document.getElementById("loading").style.display = "flex";
+        document.getElementById("loading").style.display = "flex"; // Remember to stylize this later
 
         this._player.createFromSongUrl(song.songUrl,{video : song.video})
 
         this._player.addListener({
-            onAppReady  : (app) => this._onAppReady(app),
-            onVideoReady: (v) => this._onVideoReady(v),
-            onPlay : () => this._onPlay(),
-            onPause: () => this._onPause(),
-            onStop : () => this._onStop(),
-            onMediaSeek : (pos) => this._onMediaSeek(pos),
-            onTimeUpdate: (pos) => this._onTimeUpdate(pos),
-            onThrottledTimeUpdate: (pos) => this._onThrottledTimeUpdate(pos),
-            onAppParameterUpdate: (name, value) => this._onAppParameterUpdate(name, value),
-            onAppMediaChange: (url) => this._onAppMediaChange(url),
-            onVolumeUpdate: (volume) => this._onVolumeUpdate(volume),
+            onAppReady  : (app) => this._onAppReady(app), // in use
+            onVideoReady: (v) => this._onVideoReady(v), // in use
+            onPlay : () => this._onPlay(), // in use
+            onPause: () => this._onPause(), // in use
+            onStop : () => this._onStop(), // in use
+            onMediaSeek : (pos) => this._onMediaSeek(pos), // not in use
+            onTimeUpdate: (pos) => this._onTimeUpdate(pos), // in use
+            onThrottledTimeUpdate: (pos) => this._onThrottledTimeUpdate(pos), // not in use
+            onAppParameterUpdate: (name, value) => this._onAppParameterUpdate(name, value), // not in use
+            onAppMediaChange: (url) => this._onAppMediaChange(url), // in use but dont think code pass thru
+            onVolumeUpdate: (volume) => this._onVolumeUpdate(volume), // not in use
         })
-        // volEl.addEventListener('input',(event)=>{
-        //     this._player.volume(23);
-        // })
     }
 
+    // Load interface
     _onAppReady(app)
     {
         // console.log("app:", app);
@@ -102,11 +100,10 @@ export class PlayerManager
             document.getElementById("bt_play")  .addEventListener("click", () => this._player.requestPlay());
             document.getElementById("bt_pause") .addEventListener("click", () => this._player.requestPause());
             document.getElementById("bt_rewind").addEventListener("click", () => this._player.requestStop());
-            // volEl.value = this._player.volume;
         }
         if (! app.songUrl)
         {
-      
+            // create graceful fallback
         }
     }
 
@@ -117,31 +114,32 @@ export class PlayerManager
         titleEl.innerHTML = `<span class='fs-6'>Observation </span>- ${song.name}`;
         artistEl.innerHTML = `${song.artist.name}`;
 
-        document.getElementById("moveLeft").onclick = () => this.canvasMan.move(-10, 0);
-        document.getElementById("moveRight").onclick = () => this.canvasMan.move(10, 0);
-        document.getElementById("moveUp").onclick = () => this.canvasMan.move(0, -10);
-        document.getElementById("moveDown").onclick = () => this.canvasMan.move(0, 10);
+        // Update function
+        // document.getElementById("moveLeft").onclick = () => this.canvasMan.move(-10, 0);
+        // document.getElementById("moveRight").onclick = () => this.canvasMan.move(10, 0);
+        // document.getElementById("moveUp").onclick = () => this.canvasMan.move(0, -10);
+        // document.getElementById("moveDown").onclick = () => this.canvasMan.move(0, 10);
         document.addEventListener("keydown", (e) => {
               switch (e.code) {
                 case "ArrowUp":
                 case "KeyW":
-                    console.log("Move Up");
-                    this.canvasMan.move(0, -10);
+                    // console.log("Move Up");
+                    // this.canvasMan.move(0, -10);
                     break;
                 case "ArrowDown":
                 case "KeyS":
-                    console.log("Move Down");
-                    this.canvasMan.move(0, 10);
+                    // console.log("Move Down");
+                    // this.canvasMan.move(0, 10);
                     break;
                 case "ArrowLeft":
                 case "KeyA":
-                    console.log("Move Left");
-                    this.canvasMan.move(-10, 0);
+                    // console.log("Move Left");
+                    // this.canvasMan.move(-10, 0);
                     break;
                 case "ArrowRight":
                 case "KeyD":
-                    console.log("Move Right");  
-                    this.canvasMan.move(10, 0);
+                    // console.log("Move Right");  
+                    // this.canvasMan.move(10, 0);
                     break;
                 case "Space":
                     console.log("Pause or Jump");
@@ -155,26 +153,14 @@ export class PlayerManager
                     console.log("Cancel or Exit");
                     break;
             }
-            console.log("Key pressed:", e.key);       // Human-readable name, e.g., "a", "Enter"
-            console.log("Key code:", e.code);         // Physical key on keyboard, e.g., "KeyA", "Enter"
-            console.log("Is Ctrl pressed?", e.ctrlKey);
+            // 
+            // console.log("Key pressed:", e.key);       
+            // console.log("Key code:", e.code);         
+            // console.log("Is Ctrl pressed?", e.ctrlKey);
         });
     }
 
-    _controlChange (playing)
-    {
-        if (playing)
-        {
-            document.getElementById("bt_play") .style.display = "none";
-            document.getElementById("bt_pause").style.display = "inline";
-        }
-        else
-        {
-            document.getElementById("bt_play") .style.display = "inline";
-            document.getElementById("bt_pause").style.display = "none";
-        }
-    }
-
+   
     _onPlay ()
     {
         this._controlChange(true);
@@ -220,51 +206,74 @@ export class PlayerManager
             return false;
         });
 
-        // Beat bar
+        // Beat
         const beats = this._player.findBeatChange(lastTime, position);
+        // console.log("Beat",this._player.findBeat(position).progress(position))
+        // console.log("Beat progress",beats)
         if(
             lastTime >= 0 &&
             beats.entered.length
         ) {
-            requestAnimationFrame(() => {
-                bar.className = "active";
-                requestAnimationFrame(() => {
-                    bar.className = "active beat";
-                })
-                this.canvasMan.triggerBeat();
-                // this.spawnStar();
-            })
-            // for (let i = this.lastTime + 1; 1< beats.length; i++) {
-            //     this.lastTime = 1;
-            // }
+            this.canvasMan.triggerBeat();
         }
+        // Add beat change for the star scale transformation
 
         // Lyrics Generation
-        const char = this._player.video.findChar(position);
+        const char = this._player.video.findChar(position - 100,{ loose: true});
+        // console.log("main", char);
+        // console.log("parent", char.parent);
+
         if (char && char.parent) {
-            // console.log(char.parent.text);
-            this.canvasMan.updateLyric(char.parent.text);
-            // lyricEl.innerHTML = `<h2>${char.parent.text}</h2>`;
-        }
+        const lyric = char.parent;
+        const lyricData = {
+            text: lyric.text,
+            startTime: lyric.startTime,
+            endTime: lyric.endTime,
+            position: position
+        };
+
+        this.canvasMan.setLyrics(lyricData);
+        }  
+        
+        // if (char && char.parent) {
+        //     this.canvasMan.updateLyric(char.parent.text);
+        // }
 
         lastTime = position;
 
     }
+    // Redundancy i think
     _onThrottledTimeUpdate (position)
     {
 
     }
+    // Not much use
     _onAppMediaChange (url)
     {
         this._player.requestMediaSeek(0);
         this._player.requestPause();
         const bar = document.querySelector("#bar");
     }
-
+    // remove later
     _onVolumeUpdate(volume){
         console.log(volume);
     }
-       
+    
+     _controlChange (playing)
+    {
+        if (playing)
+        {
+            document.getElementById("bt_play") .style.display = "none";
+            document.getElementById("bt_pause").style.display = "inline";
+        }
+        else
+        {
+            document.getElementById("bt_play") .style.display = "inline";
+            document.getElementById("bt_pause").style.display = "none";
+        }
+    }
+
+    
     destroy(){
         this._player.dispose();
         this.canvasMan.destroy();

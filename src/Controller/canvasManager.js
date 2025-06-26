@@ -1,18 +1,3 @@
-/* ToDo
-- Increase the resolution /
-- Add the blinking stars /
-    + Randomize the size and the durantion /
-    Add a colour transition to make it nice
-- Add a smooth transformation movement
-- Add a create and delete module for the class
-    + Create a json file of all the info
-    + Create a randomize set of item in a scene
-    + Add an onClick event that will reveal a info on a constellation
-- Add an initail blur effect for the player
-- Display the lyrics on line at a time
-- 
- */
-
 import p5 from "p5";
 import { Star } from "../Model/Stars";
 import { Lyric } from "../Model/Lyric";
@@ -21,6 +6,7 @@ import { Player } from "textalive-app-api";
 export class CanvasManager {
     constructor(canvasId) {
         this.canvas = document.getElementById(canvasId);
+        this.currentScene = new SpaceScene()
         // this.images = imageList;
         this.currentImage = null;
         this.x = 1920;
@@ -80,7 +66,7 @@ export class CanvasManager {
             }
             }
 
-            // Star animation
+            // Star animation - Keep
             for (let i = this.stars.length - 1; i >= 0; i--) {
                 const s = this.stars[i];
                 s.update();
@@ -92,7 +78,7 @@ export class CanvasManager {
     }
 
 
-    // LYRICS METHODS
+    // LYRICS METHODS - Change
     setLyrics(data) {
         const centerX = this.p.width / 2;
         const centerY = this.p.height / 2;
@@ -112,14 +98,14 @@ export class CanvasManager {
         this.lyrics.push(new Lyric(text, x, y));
     }
 
-    // EXPLORE FUNCTION
+    // EXPLORE FUNCTION - Change
     move(dx, dy) {
         this.x += dx;
         this.y += dy;
         this.p._draw();
     }
 
-    // BACKDROP FUNCTION
+    // BACKDROP FUNCTION - Need work on
     gradBg(p){
         const topHue = (p.frameCount * 0.1) %360;
         const bottomHue = (topHue + 60) %360;
@@ -135,7 +121,7 @@ export class CanvasManager {
         }
     }
 
-    // STAR
+    // BEATSTAR - Just Fine
     triggerBeat() {
         this.stars.push(new Star(this.p.random(this.p.width), this.p.random(this.p.height))); 
     }

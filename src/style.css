@@ -22,7 +22,7 @@ canvas#lyricsCanvas {
   aspect-ratio: 16 / 9;
 }
 #control {
-  background-color:chocolate;
+  background-color:rgba(210, 105, 30, 0.606);
   position: absolute;
   left: 0px;
   bottom: 0px;
@@ -40,7 +40,7 @@ canvas#lyricsCanvas {
   top: 0px;
   height: 100vh;
   width: calc(20vw);/*make the width 100vw-canvasWidth*/
-  background-color: aqua;
+  background-color: rgba(0, 255, 255, 0.496);
 }
 
 .song-detail {
@@ -126,34 +126,34 @@ canvas#lyricsCanvas {
   100% { transform: rotate(0deg); }
 } */
 .stars {
-  background-image: url('../assets/Bg/Stars.png'); 
+  background-image: url('/assets/Bg/Stars.png'); 
 }
 .shoot_star {
-  background-image: url('../assets/Bg/Shooting_Star.png'); 
+  background-image: url('/assets/Bg/Shooting_Star.png'); 
 }
 .sky {
-  background-image: url('../assets/Bg/Sky.png'); 
+  background-image: url('/assets/Bg/Sky.png'); 
 }
 .cloud_1 {
-  background-image: url('../assets/Bg/Clouds_1.png'); 
+  background-image: url('/assets/Bg/Clouds_1.png'); 
   
 }.cloud_2{
-  background-image: url('../assets/Bg/Clouds_2.png'); 
+  background-image: url('/assets/Bg/Clouds_2.png'); 
   
 }.cloud_3{
-  background-image: url('../assets/Bg/Clouds_3.png'); 
+  background-image: url('/assets/Bg/Clouds_3.png'); 
   
 }
 .mountains {
-  background-image: url('../assets/Bg/Mountain_1.png'); 
+  background-image: url('/assets/Bg/Mountain_1.png'); 
   
 }
 .mountain_bg {
-  background-image: url('../assets/Bg/Mountain_2.png'); 
+  background-image: url('/assets/Bg/Mountain_2.png'); 
   
 }
 .tower {
-  background-image: url('../assets/Bg/observation_tower.png'); 
+  background-image: url('/assets/Bg/observation_tower.png'); 
   transform: translateZ(100px);
   background-repeat: no-repeat;
   background-size:25%;

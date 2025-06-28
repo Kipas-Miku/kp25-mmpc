@@ -1,23 +1,10 @@
-/* TODO
-- Seperate the TextAlive API APP as its own Class file
-- Add A lyric log and activity log
-- Create window overlay for the app to make it more astrology like app
-
-
-- Optional
-    + Add a setting to set which kind of fact or space body to see
-*/ 
-
-import { Player,stringToDataUrl } from "textalive-app-api";
+import { Player } from "textalive-app-api";
 import { CanvasManager } from "./canvasManager";
 
 const API_TOKEN = import.meta.env.VITE_TEXTALIVE_API_TOKEN;
 
-const volEl = document.getElementById("volSlider");
 const titleEl = document.getElementById("title");
 const artistEl = document.getElementById("artist");
-const lyricEl = document.getElementById('lyricsCanvas');
-const viewEl = document.getElementById('view');
 const seekbar = document.querySelector("#seekbar");
 const paintedSeekbar = seekbar.querySelector("div");
 const bar = document.querySelector("#bar");
@@ -70,9 +57,11 @@ export class PlayerManager
         this.canvasMan = new CanvasManager("lyricsCanvas");
         this.lastBeatIndex = -1;
         document.getElementById("loading").style.display = "flex"; // Remember to stylize this later
-
         this._player.createFromSongUrl(song.songUrl,{video : song.video})
+        this._setupEvents();
+    }
 
+    _setupEvents() {
         this._player.addListener({
             onAppReady  : (app) => this._onAppReady(app), // in use
             onVideoReady: (v) => this._onVideoReady(v), // in use
@@ -81,30 +70,40 @@ export class PlayerManager
             onStop : () => this._onStop(), // in use
             onMediaSeek : (pos) => this._onMediaSeek(pos), // not in use
             onTimeUpdate: (pos) => this._onTimeUpdate(pos), // in use
-            onThrottledTimeUpdate: (pos) => this._onThrottledTimeUpdate(pos), // not in use
             onAppParameterUpdate: (name, value) => this._onAppParameterUpdate(name, value), // not in use
             onAppMediaChange: (url) => this._onAppMediaChange(url), // in use but dont think code pass thru
-            onVolumeUpdate: (volume) => this._onVolumeUpdate(volume), // not in use
         })
+
+        document.getElementById("bt_play")  .addEventListener("click", () => this._player.requestPlay());
+        document.getElementById("bt_pause") .addEventListener("click", () => this._player.requestPause());
+        document.getElementById("bt_rewind").addEventListener("click", () => this._player.requestStop());
     }
 
     // Load interface
     _onAppReady(app)
-    {
-        // console.log("app:", app);
+    {   
         
-        if (! app.managed)
-        {
+        // if (app.managed) {
+        //     document.querySelector("#control").className = "disabled";
+        // }
+        // if (!app.songUrl) {
+        //     document.querySelector("#media").className = "disabled";
+
+        //     // ストリートライト / 加賀(ネギシャワーP)
+        //     this._player.createFromSongUrl("https://piapro.jp/t/ULcJ/20250205120202", {
+        //         video: {
+        //         // 音楽地図訂正履歴
+        //         beatId: 4694275,
+        //         chordId: 2830730,
+        //         repetitiveSegmentId: 2946478,
             
-            document.getElementById("control").style.display = "block";
-            document.getElementById("bt_play")  .addEventListener("click", () => this._player.requestPlay());
-            document.getElementById("bt_pause") .addEventListener("click", () => this._player.requestPause());
-            document.getElementById("bt_rewind").addEventListener("click", () => this._player.requestStop());
-        }
-        if (! app.songUrl)
-        {
-            // create graceful fallback
-        }
+        //         // 歌詞URL: https://piapro.jp/t/DPXV
+        //         // 歌詞タイミング訂正履歴: https://textalive.jp/lyrics/piapro.jp%2Ft%2FULcJ%2F20250205120202
+        //         lyricId: 67810,
+        //         lyricDiffId: 20654
+        //         },
+        //     });
+        // }
     }
 
     _onVideoReady (v)
@@ -113,34 +112,10 @@ export class PlayerManager
         const song = this._player.data.song;
         titleEl.innerHTML = `<span class='fs-6'>Observation </span>- ${song.name}`;
         artistEl.innerHTML = `${song.artist.name}`;
+        document.getElementById("control").style.display = "block";
 
-        // Update function
-        // document.getElementById("moveLeft").onclick = () => this.canvasMan.move(-10, 0);
-        // document.getElementById("moveRight").onclick = () => this.canvasMan.move(10, 0);
-        // document.getElementById("moveUp").onclick = () => this.canvasMan.move(0, -10);
-        // document.getElementById("moveDown").onclick = () => this.canvasMan.move(0, 10);
         document.addEventListener("keydown", (e) => {
               switch (e.code) {
-                case "ArrowUp":
-                case "KeyW":
-                    // console.log("Move Up");
-                    // this.canvasMan.move(0, -10);
-                    break;
-                case "ArrowDown":
-                case "KeyS":
-                    // console.log("Move Down");
-                    // this.canvasMan.move(0, 10);
-                    break;
-                case "ArrowLeft":
-                case "KeyA":
-                    // console.log("Move Left");
-                    // this.canvasMan.move(-10, 0);
-                    break;
-                case "ArrowRight":
-                case "KeyD":
-                    // console.log("Move Right");  
-                    // this.canvasMan.move(10, 0);
-                    break;
                 case "Space":
                     console.log("Pause or Jump");
                     if (this._player.isPlaying){
@@ -153,10 +128,6 @@ export class PlayerManager
                     console.log("Cancel or Exit");
                     break;
             }
-            // 
-            // console.log("Key pressed:", e.key);       
-            // console.log("Key code:", e.code);         
-            // console.log("Is Ctrl pressed?", e.ctrlKey);
         });
     }
 
@@ -179,7 +150,7 @@ export class PlayerManager
         }
         // console.log("stop");
     }
-    _onMediaSeek (position)
+       _onMediaSeek (position)
     {
         // console.log("seek", position);
     }
@@ -208,45 +179,35 @@ export class PlayerManager
 
         // Beat
         const beats = this._player.findBeatChange(lastTime, position);
-        // console.log("Beat",this._player.findBeat(position).progress(position))
-        // console.log("Beat progress",beats)
         if(
             lastTime >= 0 &&
             beats.entered.length
         ) {
             this.canvasMan.triggerBeat();
         }
-        // Add beat change for the star scale transformation
 
         // Lyrics Generation
-        const char = this._player.video.findChar(position - 100,{ loose: true});
-        // console.log("main", char);
-        // console.log("parent", char.parent);
-
-        if (char && char.parent) {
-        const lyric = char.parent;
-        const lyricData = {
-            text: lyric.text,
-            startTime: lyric.startTime,
-            endTime: lyric.endTime,
-            position: position
-        };
-
-        this.canvasMan.setLyrics(lyricData);
-        }  
-        
-        // if (char && char.parent) {
-        //     this.canvasMan.updateLyric(char.parent.text);
+        // pass the lyrics not sure which level to the lyric class
+        // passing it 100 frame earlier would make it more karaoke like
+        if (!this._player.video.firstChar) {
+            return;
+        }
+        // if (lastTime > position + 1000) {
+        //     // resetChars();
         // }
+        const phrase = this._player.video.findPhrase(position);
+        if (!this._lastPhrase || this._lastPhrase.startTime !== phrase?.startTime) {
+            this._lastPhrase = phrase;
+            if (phrase) {
+                this.canvasMan.updateLyrics(phrase,position);  // Send phrase object
+            }
+        }
 
+        this.canvasMan.updateTime(position);
         lastTime = position;
 
     }
-    // Redundancy i think
-    _onThrottledTimeUpdate (position)
-    {
 
-    }
     // Not much use
     _onAppMediaChange (url)
     {
@@ -254,11 +215,7 @@ export class PlayerManager
         this._player.requestPause();
         const bar = document.querySelector("#bar");
     }
-    // remove later
-    _onVolumeUpdate(volume){
-        console.log(volume);
-    }
-    
+
      _controlChange (playing)
     {
         if (playing)
@@ -278,20 +235,5 @@ export class PlayerManager
         this._player.dispose();
         this.canvasMan.destroy();
     }
-
-
-    // Insert this in the canvas manager
-
-    // spawnStar() {
-    //     console.log("start")
-    //     const star = document.createElement("div");
-        
-    //     star.position = "absolute";
-    //     star.className = "star";
-    //     star.style.left = `${Math.random() * window.innerWidth}px`;
-    //     star.style.top = `${Math.random() * window.innerHeight}px`;
-    //     viewEl.appendChild(star);
-    //     setTimeout(() => viewEl.removeChild(star), 500);
-    //   }
     
 }

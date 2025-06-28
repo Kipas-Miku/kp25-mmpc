@@ -1,4 +1,4 @@
-import { songs } from "../../assets/songs";
+import { songs } from "../Model/songs";
 import { PlayerManager } from "./playerManager";
 
 export class Router
@@ -38,7 +38,6 @@ export class Router
                     }
                 });
                 document.getElementById("ssReturnMenu").onclick = () => this.navigate("mainMenu");
-    
     }
 
 }

@@ -1,0 +1,82 @@
+{
+  "char": [
+    {
+      "name": "Kaito",
+      "poses": [
+        "assets/Vocaloid/Kaito Front PNG.png",
+        "assets/Vocaloid/Kaito Sit.png",
+        "assets/Vocaloid/Kaito Star Pose.png"
+      ]
+    },
+    {
+      "name": "Len",
+      "poses": [
+        "assets/Vocaloid/Len Front PNG.png",
+        "assets/Vocaloid/Len Sit.png",
+        "assets/Vocaloid/Len Star Pose.png"
+      ]
+    },
+    {
+      "name": "Luka",
+      "poses": [
+        "assets/Vocaloid/Luka Front PNG.png",
+        "assets/Vocaloid/Luka Sit.png",
+        "assets/Vocaloid/Luka Star Pose.png"
+      ]
+    },
+    {
+      "name": "Meiko",
+      "poses": [
+        "assets/Vocaloid/Meiko Front PNG.png",
+        "assets/Vocaloid/Meiko Sit.png",
+        "assets/Vocaloid/Meiko Star Pose.png"
+      ]
+    },
+    {
+      "name": "Miku",
+      "poses": [
+        "assets/Vocaloid/Miku Front PNG.png",
+        "assets/Vocaloid/Miku Sit.png",
+        "assets/Vocaloid/Miku Star Pose.png"
+      ]
+    },
+    {
+      "name": "Rin",
+      "poses": [
+        "assets/Vocaloid/Rin Front PNG.png",
+        "assets/Vocaloid/Rin Sit.png",
+        "assets/Vocaloid/Rin Star Pose.png"
+      ]
+    }
+  ],
+  "star": [
+    {
+      "name": "Kaito",
+      "image": "assets/Stars/A/Star_Kaito.png"
+    },
+    {
+      "name": "Len",
+      "image": "assets/Stars/A/Star_Len.png"
+    },
+    {
+      "name": "Luka",
+      "image": "assets/Stars/A/Star_Luka.png"
+    },
+    {
+      "name": "Meiko",
+      "image": "assets/Stars/A/Star_Meiko.png"
+    },
+    {
+      "name": "Miku",
+      "image": "assets/Stars/A/Star_Miku.png"
+    },
+    {
+      "name": "Rin",
+      "image": "assets/Stars/A/Star_Rin.png"
+    },
+    {
+      "name": "Generic",
+      "image": "assets/Stars/A/Star.png"
+    }
+  ]
+}

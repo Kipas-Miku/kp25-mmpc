@@ -16,11 +16,11 @@ export class CanvasManager {
         this.stars = [];
         this.p = new p5((sketch) => this.sketch(sketch));
         
-
         // this.currentScene = new Scene()
         this.currentImage = null;
-        this.x = 1920;
-        this.y = 1080;
+        this.x = window.innerWidth;
+        this.y = window.innerHeight;
+        this.prevY = this.y / 2;
     }
 
     // main p5 initializer
@@ -28,9 +28,9 @@ export class CanvasManager {
         this.p = p;
 
         p.setup = () => {
-            p.createCanvas(window.innerWidth, window.innerHeight,this.canvas);
-
-            this.sceneManager = new SceneManager(p);
+            p.createCanvas(this.x, this.y, this.canvas);
+this.y
+             this.sceneManager = new SceneManager(p);
 
             p.textFont('Press+Start+2P')
         };

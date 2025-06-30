@@ -1,5 +1,5 @@
 export class Lyric {
-  constructor(p, phrase) {
+  constructor(p, phrase,  prevY) {
     this.p = p;
     this.phrase = phrase;
     this.chars = [];
@@ -7,13 +7,21 @@ export class Lyric {
     this.isFadingOut = false;
     this.isDead = false;
     this.fadeSpeed = 5;
+
     const baseY = p.height / 2;
-    const y = baseY + p.random(-100, 100);
-    this.y = y;
+    let newY;
+    const minDistance = 100;
+
+    do {
+      newY = baseY + p.random(-200,200)
+    } while (Math.abs(newY - prevY) < minDistance);
+
+    this.y = newY;
 
     let char = phrase.firstChar;
     while (char) {
       const word = char.parent;
+
       this.chars.push({
         text: char.text,
         startTime: char.startTime,
@@ -26,11 +34,11 @@ export class Lyric {
         isFirstInWord: word.firstChar === char,
         isEnglish: word.language === "en"
       });
-      // if (char == phrase.lastChar) {
-      //   break;
-      // } else {
-      // }
-      char = char.next;
+      if (char == phrase.lastChar) {
+        break;
+      } else {
+        char = char.next;
+      }
     }
   }
 
@@ -56,7 +64,6 @@ export class Lyric {
         if (char.alpha < 255) {
           char.alpha += 15;
         }
-        console.log(char);
       }
     }
   }

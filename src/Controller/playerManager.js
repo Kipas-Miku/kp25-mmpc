@@ -54,7 +54,7 @@ export class PlayerManager
             },
             mediaElement:document.getElementById("media")
         });
-        this.canvasMan = new CanvasManager("lyricsCanvas");
+        this.canvasMan = new CanvasManager("lyricsCanvas", this._player);
         this.lastBeatIndex = -1;
         document.getElementById("loading").style.display = "flex"; // Remember to stylize this later
         this._player.createFromSongUrl(song.songUrl,{video : song.video})
@@ -194,7 +194,7 @@ export class PlayerManager
         }
         // if (lastTime > position + 1000) {
         //     // resetChars();
-        // }
+        // } 
         const phrase = this._player.video.findPhrase(position);
         if (!this._lastPhrase || this._lastPhrase.startTime !== phrase?.startTime) {
             this._lastPhrase = phrase;
@@ -230,6 +230,11 @@ export class PlayerManager
         }
     }
 
+    // resetChars() {
+    //     lastTime = -1;
+    //     while (textContainer.firstChild)
+    //         textContainer.removeChild(textContainer.firstChild);
+    // }
     
     destroy(){
         this._player.dispose();

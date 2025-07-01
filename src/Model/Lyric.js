@@ -100,7 +100,7 @@ export class Lyric {
 
       // Also optionally: add a tiny space after English words
       if (char.isEnglish && char.isLastInWord) {
-        currentX += spacing * 0.3;
+        currentX += spacing * 0.2;
       }
     });
 

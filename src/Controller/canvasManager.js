@@ -7,10 +7,10 @@ export class CanvasManager {
     constructor(canvasId, player) {
         this.canvas = document.getElementById(canvasId);
         this.player = player;
-
+        console.log(this.player);
         this.currentLyric = null;
         this.oldLyrics = [];
-        this.sceneManager = null;
+        this.scene = null;
         this.currentTime = -1
         
         this.stars = [];
@@ -28,16 +28,15 @@ export class CanvasManager {
         this.p = p;
 
         p.setup = () => {
-            p.createCanvas(this.x, this.y, this.canvas);
-this.y
-             this.sceneManager = new SceneManager(p);
+            p.createCanvas(this.x, this.y,this.canvas);
+            this.scene = new SceneManager(p);
 
             p.textFont('Press+Start+2P')
         };
 
         p.draw = () => {
             p.clear();
-            this.gradBg(p);
+            this.gradBg(p, this.player);
 
             // Star animation - Keep
             for (let i = this.stars.length - 1; i >= 0; i--) {
@@ -47,8 +46,10 @@ this.y
                 if (s.isDead()) this.stars.splice(i, 1);
             }
 
-      
-            // this.sceneManager.draw(p);
+            if(this.scene){
+                this.scene.draw();
+            }
+            
             if (this.currentLyric) {
                 this.currentLyric.update(this.currentTime);
                 this.currentLyric.draw();
@@ -67,6 +68,12 @@ this.y
             p.resizeCanvas(window.innerWidth, window.innerHeight);
         };
 
+        p.mousePressed = () => {
+            if (this.scene && this.scene.loaded && this.scene.isClicked(p.mouseX, p.mouseY)) {
+                console.log("🪐 Planet was clicked!");
+            }
+        }
+
         p.keyPressed = () => {
             const keyMap = {
                 ArrowLeft: 'left',
@@ -76,6 +83,7 @@ this.y
             };
             const direction = keyMap[p.key];
             if (direction) {
+                console.log(direction);
                 this.sceneManager.triggerTransition(direction);
             }
         };
@@ -95,17 +103,20 @@ this.y
 
     // BACKDROP FUNCTION - Need work on
     gradBg(p){
-        const topHue = (p.frameCount * 0.1) %360;
-        const bottomHue = (topHue + 60) %360;
+        if(this.player.isPlaying){
+            
+            const topHue = (p.frameCount * 0.1) %360;
+            const bottomHue = (topHue + 60) %360;
 
-        const topColor = p.color(`hsb(${topHue},80%,10%)`);
-        const bottomColor = p.color(`hsb(${bottomHue},90%,5%)`);
-  
-        for(let y=0; y < p.height;y++) {
-            const inter = y /p.height;
-            const c = p.lerpColor(topColor,bottomColor,inter);
-            p.stroke(c);
-            p.line(0,y,p.width,y);
+            const topColor = p.color(`hsb(${topHue},80%,10%)`);
+            const bottomColor = p.color(`hsb(${bottomHue},90%,5%)`);
+    
+            for(let y=0; y < p.height;y++) {
+                const inter = y /p.height;
+                const c = p.lerpColor(topColor,bottomColor,inter);
+                p.stroke(c);
+                p.line(0,y,p.width,y);
+            }
         }
     }
 

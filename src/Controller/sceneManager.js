@@ -1,6 +1,5 @@
 import vocaData from '../assets/voca.json'
 import starData from '../assets/star.json'
-import data from 'p5/data';
 
 export class SceneManager {
   constructor(p) {
@@ -17,6 +16,15 @@ export class SceneManager {
     this.width = 200;
     this.height = 200;
     this.radius = 200;
+
+    this.animateType = 'none';
+    this.rotationAngle = 0;
+    this.rotationDirection = 1;
+    this.rotationSpeed = 0.01;
+    this.maxRotation = 0.2;
+
+    this.floatOffest = 0;
+    this.float
 
     this.positions = [
       () => ({ x: this.p.width * 0.2, y: this.p.height * 0.5 }), // Center left
@@ -94,9 +102,6 @@ export class SceneManager {
       type: randomFact.type,
       fact: randomFact.fact
     }
-    console.log("Clicked:", randomFact.name);
-    console.log("Type:", randomFact.type);
-    console.log("Fact:", randomFact.fact);
     // Optional: show modal or toast
   }
 

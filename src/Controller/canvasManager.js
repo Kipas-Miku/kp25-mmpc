@@ -7,9 +7,10 @@ export class CanvasManager {
     constructor(canvasId, player) {
         this.canvas = document.getElementById(canvasId);
         this.player = player;
-        console.log(this.player);
+        
         this.currentLyric = null;
         this.oldLyrics = [];
+        
         this.scene = null;
         this.currentTime = -1
         

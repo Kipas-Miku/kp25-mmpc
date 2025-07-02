@@ -67,6 +67,7 @@ export class CanvasManager {
 
         p.windowResized = () => {
             p.resizeCanvas(window.innerWidth, window.innerHeight);
+            this.scene.resize();
         };
 
         p.mousePressed = () => {

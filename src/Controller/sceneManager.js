@@ -47,6 +47,18 @@ export class SceneManager {
     if(this.vocaloid) this.vocaloid.draw();
   }
 
+  resize(){
+    const p = this.p;
+
+    // Update star position
+    const newStarPos = this.starPos[Math.floor(Math.random() * this.starPos.length)]();
+    this.vocastar.setPosition(newStarPos.x, newStarPos.y);
+
+    // Update vocaloid position
+    const newVocaPos = this.vocaPos[Math.floor(Math.random() * this.vocaPos.length)]();
+    this.vocaloid.setPosition(newVocaPos.x, newVocaPos.y);
+  }
+
   clickHandler(mx,my){
     if(this.vocastar && this.vocastar.isClicked(mx,my)){
       const fact = this.getStarData();
@@ -93,7 +105,6 @@ export class SceneManager {
       type: randomFact.type,
       fact: randomFact.fact
     }
-    // Optional: show modal or toast
   }
 
 }

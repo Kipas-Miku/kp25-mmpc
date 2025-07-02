@@ -11,7 +11,6 @@ export class Vocaloid {
 
     // Adjustable Variable
 
-
     this.loadImage();
   }
 
@@ -34,5 +33,10 @@ export class Vocaloid {
     this.p.translate(this.x, this.y + float);
     this.p.image(this.image, 0, 0, this.size, this.size);
     this.p.pop();
+  }
+
+  setPosition(x, y) {
+    this.x = x;
+    this.y = y;
   }
 }

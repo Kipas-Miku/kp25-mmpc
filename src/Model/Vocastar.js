@@ -36,6 +36,11 @@ export class Vocastar {
         this.p.pop();
     }
 
+    setPosition(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
     isClicked(mx, my) {
         return this.p.dist(mx, my, this.x, this.y) < this.size / 2;
     }

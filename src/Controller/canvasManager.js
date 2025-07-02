@@ -70,8 +70,11 @@ export class CanvasManager {
         };
 
         p.mousePressed = () => {
-            if (this.scene && this.scene.loaded && this.scene.isClicked(p.mouseX, p.mouseY)) {
-                console.log("🪐 Planet was clicked!");
+            let response = this.scene.clickHandler(p.mouseX, p.mouseY);
+            if (this.scene && this.scene.loaded && response.status) {
+                const fact = response.data;
+                console.log("⭐ Star clicked!");
+                console.log(`💡 ${fact.name} (${fact.type}): ${fact.fact}`);
             }
         }
 

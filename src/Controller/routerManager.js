@@ -1,4 +1,4 @@
-import { songs } from "../Model/songs";
+import { songs } from "../Model/Songs";
 import { PlayerManager } from "./playerManager";
 
 export class Router

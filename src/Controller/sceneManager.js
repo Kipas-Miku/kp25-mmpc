@@ -10,6 +10,7 @@ export class SceneManager {
     this.p = p;
     this.loaded = false;
 
+    // Element Position
     this.starPos = [
       () => ({ x: this.p.width * 0.2, y: this.p.height * 0.5 }), // Center left
       () => ({ x: this.p.width * 0.2, y: this.p.height * 0.2 }), // Upper left
@@ -26,6 +27,14 @@ export class SceneManager {
     this.vocaloid = null;
 
     this.setup();
+
+    // Tranistion
+    this.isTransitioning = false;
+    this.transitionProgress = 0;
+    this.transitionSpeed = 0.02;
+
+    this.currentScene = null;
+    this.nextScene = null;
   }
 
   setup() {
@@ -43,6 +52,38 @@ export class SceneManager {
   }
 
   draw(){
+    const p = this.p;
+    if (this.isTransitioning) {
+    this.transitionProgress += this.transitionSpeed;
+    const ease = p.easeInOutCubic(this.transitionProgress);
+
+    const offset = ease * p.width;
+
+    // Draw old scene sliding left
+    p.push();
+    p.translate(-offset, 0);
+    this.currentScene.star.draw();
+    this.currentScene.vocaloid.draw();
+    p.pop();
+
+    // Draw new scene sliding in from the right
+    p.push();
+    p.translate(p.width - offset, 0);
+    this.nextScene.star.draw();
+    this.nextScene.vocaloid.draw();
+    p.pop();
+
+    if (this.transitionProgress >= 1) {
+      this.isTransitioning = false;
+      this.currentScene = null;
+      this.nextScene = null;
+    }
+
+  } else {
+    this.star?.draw();
+    this.vocaloid?.draw();
+  }
+
     if(this.vocastar) this.vocastar.draw();
     if(this.vocaloid) this.vocaloid.draw();
   }
@@ -57,6 +98,28 @@ export class SceneManager {
     // Update vocaloid position
     const newVocaPos = this.vocaPos[Math.floor(Math.random() * this.vocaPos.length)]();
     this.vocaloid.setPosition(newVocaPos.x, newVocaPos.y);
+  }
+
+  startTransits(dir) {
+    this.isTransitioning = true;
+    this.transitionProgress = 0;
+
+    this.currentScene = {
+      star: this.vocastar,
+      vocaloid: this.vocaloid,
+    };
+
+    // Generate new Scene 
+    const newAsset = this.getRandomVocaloidAssets();
+
+    
+    this.vocastar = new Vocastar(this.p, newAsset.star);
+    this.vocaloid = new Vocaloid(this.p, newAsset.character);
+
+    this.nextScene = {
+      star: this.vocastar,
+      vocaloid: this.vocaloid,
+    }
   }
 
   clickHandler(mx,my){

@@ -87,9 +87,9 @@ export class CanvasManager {
                 ArrowDown: 'down',
             };
             const direction = keyMap[p.key];
-            if (direction) {
+            if (direction && !this.scene.isTransitioning) {
                 console.log(direction);
-                this.sceneManager.triggerTransition(direction);
+                this.scene.startTransits(direction);
             }
         };
     }

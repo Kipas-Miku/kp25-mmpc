@@ -9,43 +9,24 @@ export class SceneManager {
     // Main object initialization
     this.p = p;
     this.loaded = false;
-
-    // Element Position
-    this.starPos = [
-      () => ({ x: this.p.width * 0.2, y: this.p.height * 0.5 }), // Center left
-      () => ({ x: this.p.width * 0.2, y: this.p.height * 0.2 }), // Upper left
-      () => ({ x: this.p.width * 0.2, y: this.p.height * 0.8 })  // Bottom left
-    ];
-
-    this.charPos = [
-      () => ({ x: this.p.width * 0.8, y: this.p.height * 0.5 }), // Center right
-      () => ({ x: this.p.width * 0.8, y: this.p.height * 0.2 }), // Upper right
-      () => ({ x: this.p.width * 0.8, y: this.p.height * 0.8 })  // Bottom right
-    ];
+    this.fact = null;
+    this.assetData = null;
+    this.xStar = 0;
+    this.yStar = 0;
+    this.xChar = 0;
+    this.yChar = 0;
 
     this.vocastar = null;
     this.vocaloid = null;
 
     this.setup();
-
-    // Tranistion
-    this.isTransitioning = false;
-    this.transitionProgress = 0;
-    this.transitionSpeed = 0.02;
-
-    this.currentScene = null;
-    this.nextScene = null;
   }
 
   setup() {
-    const assetData = this.getRandomVocaloidAssets();
-
-    const starPos = this.starPos[Math.floor(Math.random() * this.starPos.length)]();
-    const vocaPos = this.charPos[Math.floor(Math.random() * this.charPos.length)]();
-
+    this.loadAssets();
     // create instances
-    this.vocastar = new Vocastar(this.p, assetData.star, starPos.x, starPos.y);
-    this.vocaloid = new Vocaloid(this.p, assetData.character, vocaPos.x, vocaPos.y);
+    this.vocastar = new Vocastar(this.p, this.assetData.star, this.xStar, this.yStar);
+    this.vocaloid = new Vocaloid(this.p, this.assetData.character, this.xChar, this.yChar);
 
     this.loaded = true;
     console.log("✅ Scene initialized");
@@ -53,81 +34,56 @@ export class SceneManager {
 
   draw(){
     const p = this.p;
-    if (this.isTransitioning) {
-    this.transitionProgress += this.transitionSpeed;
-    const ease = p.easeInOutCubic(this.transitionProgress);
 
-    const offset = ease * p.width;
-
-    // Draw old scene sliding left
-    p.push();
-    p.translate(-offset, 0);
-    this.currentScene.star.draw();
-    this.currentScene.vocaloid.draw();
-    p.pop();
-
-    // Draw new scene sliding in from the right
-    p.push();
-    p.translate(p.width - offset, 0);
-    this.nextScene.star.draw();
-    this.nextScene.vocaloid.draw();
-    p.pop();
-
-    if (this.transitionProgress >= 1) {
-      this.isTransitioning = false;
-      this.currentScene = null;
-      this.nextScene = null;
-    }
-
-  } else {
-    this.star?.draw();
+    // if(this.vocastar) this.vocastar.draw();
+    // if(this.vocaloid) this.vocaloid.draw();
+    this.vocastar?.draw();
     this.vocaloid?.draw();
   }
 
-    if(this.vocastar) this.vocastar.draw();
-    if(this.vocaloid) this.vocaloid.draw();
+  async loadAssets(){
+    this.assetData = this.getRandomVocaloidAssets();
+    this.fact = this.getStarData();
+
+    this.randomizePositions();
   }
 
   resize(){
     const p = this.p;
-
-    // Update star position
-    const newStarPos = this.starPos[Math.floor(Math.random() * this.starPos.length)]();
-    this.vocastar.setPosition(newStarPos.x, newStarPos.y);
-
-    // Update vocaloid position
-    const newVocaPos = this.vocaPos[Math.floor(Math.random() * this.vocaPos.length)]();
-    this.vocaloid.setPosition(newVocaPos.x, newVocaPos.y);
+    this.randomizePositions();
+    this.vocastar.setPosition(this.xStar, this.yStar);
+    this.vocaloid.setPosition(this.xChar, this.yChar);
   }
 
-  startTransits(dir) {
-    this.isTransitioning = true;
-    this.transitionProgress = 0;
+  randomizePositions() {
 
-    this.currentScene = {
-      star: this.vocastar,
-      vocaloid: this.vocaloid,
-    };
+    // Element Position
+    const starPosList = [
+      () => ({ x: this.p.width * 0.2, y: this.p.height * 0.5 }), // Center left
+      () => ({ x: this.p.width * 0.2, y: this.p.height * 0.2 }), // Upper left
+      () => ({ x: this.p.width * 0.2, y: this.p.height * 0.8 })  // Bottom left
+    ];
 
-    // Generate new Scene 
-    const newAsset = this.getRandomVocaloidAssets();
+    const vocaPosList = [
+      () => ({ x: this.p.width * 0.8, y: this.p.height * 0.5 }), // Center right
+      () => ({ x: this.p.width * 0.8, y: this.p.height * 0.2 }), // Upper right
+      () => ({ x: this.p.width * 0.8, y: this.p.height * 0.8 })  // Bottom right
+    ];
 
-    
-    this.vocastar = new Vocastar(this.p, newAsset.star);
-    this.vocaloid = new Vocaloid(this.p, newAsset.character);
+    const starPos = starPosList[Math.floor(Math.random() * starPosList.length)]();
+    const vocaPos = vocaPosList[Math.floor(Math.random() * vocaPosList.length)]();
 
-    this.nextScene = {
-      star: this.vocastar,
-      vocaloid: this.vocaloid,
-    }
+    this.xStar = starPos.x;
+    this.yStar = starPos.y;
+    this.xChar = vocaPos.x;
+    this.yChar = vocaPos.y;
   }
-
+  
   clickHandler(mx,my){
     if(this.vocastar && this.vocastar.isClicked(mx,my)){
-      const fact = this.getStarData();
       return {
         status: true,
-        data: fact
+        data: this.fact
       }
     }
   }
@@ -156,11 +112,11 @@ export class SceneManager {
       };
 
     } catch (err) {
-      console.error("Failed to load assets:", err);
+      console.error("❌ Failed to load assets:", err);
     }
   }
 
-  getStarData() {
+  getStarData() {  
     const data = starData;
     const randomFact = data.stars[Math.floor(Math.random() * data.stars.length)];
     return {

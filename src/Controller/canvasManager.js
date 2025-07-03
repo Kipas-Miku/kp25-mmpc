@@ -2,26 +2,40 @@ import p5 from "p5";
 import { Star } from "../Model/Stars";
 import { Lyric } from "../Model/Lyric";
 import { SceneManager } from "./sceneManager";
+import { TransitionManager } from "./transitionManager";
 
 export class CanvasManager {
     constructor(canvasId, player) {
+        // Initialization
         this.canvas = document.getElementById(canvasId);
         this.player = player;
-        
-        this.currentLyric = null;
-        this.oldLyrics = [];
-        
-        this.scene = null;
+        this.topHue = 172;
         this.currentTime = -1
+        this.prevY = this.y / 2;
         
+        // Declaration
+        this.currentLyric = null;
+        this.scene = null;
+        this.transition = null;
         this.stars = [];
-        this.p = new p5((sketch) => this.sketch(sketch));
+        this.oldLyrics = [];
+
+        // Modular control values
+        // Gradient Background
+        this.hueSpeed = 0.01;        // how fast hue changes
+        this.hueGap = 10;           // difference between top and bottom hue
+        this.saturationTop = 80;
+        this.brightnessTop = 10;
+        this.saturationBottom = 100;
+        this.brightnessBottom = 8;
         
-        // this.currentScene = new Scene()
-        this.currentImage = null;
+        // Canvas Size
         this.x = window.innerWidth;
         this.y = window.innerHeight;
-        this.prevY = this.y / 2;
+
+        // Initializing Canvas
+        this.p = new p5((sketch) => this.sketch(sketch));
+        
     }
 
     // main p5 initializer
@@ -32,12 +46,14 @@ export class CanvasManager {
             p.createCanvas(this.x, this.y,this.canvas);
             this.scene = new SceneManager(p);
 
+            this.transition = new TransitionManager(p, this.scene);
+
             p.textFont('Press+Start+2P')
         };
 
         p.draw = () => {
             p.clear();
-            this.gradBg(p, this.player);
+            this.gradBg(p);
 
             // Star animation - Keep
             for (let i = this.stars.length - 1; i >= 0; i--) {
@@ -47,7 +63,7 @@ export class CanvasManager {
                 if (s.isDead()) this.stars.splice(i, 1);
             }
 
-            if(this.scene){
+            if(!this.scene){
                 this.scene.draw();
             }
             
@@ -56,13 +72,14 @@ export class CanvasManager {
                 this.currentLyric.draw();
             }
 
-                // Draw and clean up old lyrics
+            // Draw and clean up old lyrics
             this.oldLyrics = this.oldLyrics.filter(lyric => {
                 lyric.update(this.currentTime);
                 lyric.draw();
             return !lyric.isDead;
             });
 
+            this.transition.updateAndDraw();
         };
 
         p.windowResized = () => {
@@ -71,8 +88,10 @@ export class CanvasManager {
         };
 
         p.mousePressed = () => {
+            let status = false;
             let response = this.scene.clickHandler(p.mouseX, p.mouseY);
-            if (this.scene && this.scene.loaded && response.status) {
+            if(response) status = response.status;
+            if (this.scene && this.scene.loaded && status) {
                 const fact = response.data;
                 console.log("⭐ Star clicked!");
                 console.log(`💡 ${fact.name} (${fact.type}): ${fact.fact}`);
@@ -89,8 +108,12 @@ export class CanvasManager {
             const direction = keyMap[p.key];
             if (direction && !this.scene.isTransitioning) {
                 console.log(direction);
-                this.scene.startTransits(direction);
+                this.transition.startTransition(direction);
             }
+        };
+
+        p.easeInOutCubic = function(t) {
+            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
         };
     }
 
@@ -102,26 +125,27 @@ export class CanvasManager {
             this.currentLyric.fadeOut();
             this.oldLyrics.push(this.currentLyric);
         }
-        console.log(phrase)
         this.currentLyric = new Lyric(this.p, phrase);
     }
 
     // BACKDROP FUNCTION - Need work on
     gradBg(p){
-        if(this.player.isPlaying){
-            
-            const topHue = (p.frameCount * 0.1) %360;
-            const bottomHue = (topHue + 60) %360;
+       // Update top hue if playing
+        if (this.player.isPlaying) {
+            // this.topHue = (p.frameCount * this.hueSpeed) % 360;
+            this.topHue = Math.abs((Math.sin(p.frameCount * this.hueSpeed)*51)+223) ;
+        }
 
-            const topColor = p.color(`hsb(${topHue},80%,10%)`);
-            const bottomColor = p.color(`hsb(${bottomHue},90%,5%)`);
-    
-            for(let y=0; y < p.height;y++) {
-                const inter = y /p.height;
-                const c = p.lerpColor(topColor,bottomColor,inter);
-                p.stroke(c);
-                p.line(0,y,p.width,y);
-            }
+        const bottomHue = (this.topHue + this.hueGap) % 360;
+
+        const topColor = p.color(`hsb(${this.topHue}, ${this.saturationTop}%, ${this.brightnessTop}%)`);
+        const bottomColor = p.color(`hsb(${bottomHue}, ${this.saturationBottom}%, ${this.brightnessBottom}%)`);
+
+        for (let y = 0; y < p.height; y++) {
+            const inter = y / p.height;
+            const c = p.lerpColor(topColor, bottomColor, inter);
+            p.stroke(c);
+            p.line(0, y, p.width, y);
         }
     }
 
@@ -139,7 +163,3 @@ export class CanvasManager {
     }
 
 }
-// document.getElementById("moveLeft").onclick = () => this.canvasMan.move(-10, 0);
-// document.getElementById("moveRight").onclick = () => this.canvasMan.move(10, 0);
-// document.getElementById("moveUp").onclick = () => this.canvasMan.move(0, -10);
-// document.getElementById("moveDown").onclick = () => this.canvasMan.move(0, 10);

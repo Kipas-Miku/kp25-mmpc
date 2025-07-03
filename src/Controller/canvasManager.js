@@ -9,7 +9,6 @@ export class CanvasManager {
         // Initialization
         this.canvas = document.getElementById(canvasId);
         this.player = player;
-        this.topHue = 172;
         this.currentTime = -1
         this.prevY = this.y / 2;
         
@@ -19,19 +18,20 @@ export class CanvasManager {
         this.transition = null;
         this.stars = [];
         this.oldLyrics = [];
-
+        
         // Modular control values
         // Gradient Background
         this.hueSpeed = 0.01;        // how fast hue changes
         this.hueGap = 10;           // difference between top and bottom hue
+        this.topHue = Math.abs((Math.sin(1 * this.hueSpeed)*51)+223);
         this.saturationTop = 80;
         this.brightnessTop = 10;
         this.saturationBottom = 100;
         this.brightnessBottom = 8;
         
         // Canvas Size
-        this.x = window.innerWidth;
-        this.y = window.innerHeight;
+        this.x = window.innerWidth * 0.7;
+        this.y = window.innerHeight * 0.7;
 
         // Initializing Canvas
         this.p = new p5((sketch) => this.sketch(sketch));

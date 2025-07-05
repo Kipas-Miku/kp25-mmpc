@@ -4,9 +4,10 @@ import { Vocaloid } from '../Model/Vocaloid';
 import { Vocastar } from '../Model/Vocastar';
 
 export class SceneManager {
-  constructor(p) {
+  constructor(p,player) {
 
     // Main object initialization
+    this.player = player;
     this.p = p;
     this.loaded = false;
     this.fact = null;
@@ -16,15 +17,16 @@ export class SceneManager {
     this.xChar = 0;
     this.yChar = 0;
 
-    this.vocastar = null;
-    this.vocaloid = null;
-
+    
     this.setup();
   }
 
   setup() {
     this.loadAssets();
     // create instances
+    this.vocastar = null;
+    this.vocaloid = null;
+
     this.vocastar = new Vocastar(this.p, this.assetData.star, this.xStar, this.yStar);
     this.vocaloid = new Vocaloid(this.p, this.assetData.character, this.xChar, this.yChar);
 
@@ -34,11 +36,10 @@ export class SceneManager {
 
   draw(){
     const p = this.p;
-
-    // if(this.vocastar) this.vocastar.draw();
-    // if(this.vocaloid) this.vocaloid.draw();
-    this.vocastar?.draw();
-    this.vocaloid?.draw();
+    if(this.player.isPlaying || this.player.mediaPosition > 0){
+      this.vocastar?.draw();
+      this.vocaloid?.draw();
+    }
   }
 
   async loadAssets(){
@@ -81,6 +82,8 @@ export class SceneManager {
   
   clickHandler(mx,my){
     if(this.vocastar && this.vocastar.isClicked(mx,my)){
+      
+    this.fact = this.getStarData();
       return {
         status: true,
         data: this.fact

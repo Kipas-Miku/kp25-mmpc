@@ -4,10 +4,17 @@ import { Lyric } from "../Model/Lyric";
 import { SceneManager } from "./sceneManager";
 import { TransitionManager } from "./transitionManager";
 
+const factName = document.getElementById("fact-name");
+const factType = document.getElementById("fact-type");
+const factImg = document.getElementById("fact-img");
+const factNo = document.getElementById("fact-no");
+const factEntry = document.getElementById("fact-entry");
+const factToggle = document.getElementById('fact-toggle');
+const factCollapse = document.getElementById('fact');
+
 export class CanvasManager {
-    constructor(canvasId, player) {
+    constructor( player) {
         // Initialization
-        this.canvas = document.getElementById(canvasId);
         this.player = player;
         this.currentTime = -1
         this.prevY = this.y / 2;
@@ -43,12 +50,12 @@ export class CanvasManager {
         this.p = p;
 
         p.setup = () => {
-            p.createCanvas(this.x, this.y,this.canvas);
-            this.scene = new SceneManager(p);
+            p.textFont('Press+Start+2P');
+            p.createCanvas(this.x, this.y);
+            this.scene = new SceneManager(p,this.player);
 
-            this.transition = new TransitionManager(p, this.scene);
+            this.transition = new TransitionManager(p, this.scene, this.player);
 
-            p.textFont('Press+Start+2P')
         };
 
         p.draw = () => {
@@ -83,7 +90,7 @@ export class CanvasManager {
         };
 
         p.windowResized = () => {
-            p.resizeCanvas(window.innerWidth, window.innerHeight);
+            p.resizeCanvas(window.innerWidth* 0.7, window.innerHeight* 0.7);
             this.scene.resize();
         };
 
@@ -93,6 +100,13 @@ export class CanvasManager {
             if(response) status = response.status;
             if (this.scene && this.scene.loaded && status) {
                 const fact = response.data;
+                this.logFact(`${fact.fact}`);
+                factName.innerHTML = `${fact.name} `;
+                factType.innerHTML = `${fact.type} `;
+                const no = Math.floor(Math.random() * 10000);
+                const formattedNo = no.toString().padStart(4, '0');
+                factNo.innerHTML = formattedNo;
+                factEntry.innerHTML = `${fact.fact} `;
                 console.log("⭐ Star clicked!");
                 console.log(`💡 ${fact.name} (${fact.type}): ${fact.fact}`);
             }
@@ -107,7 +121,6 @@ export class CanvasManager {
             };
             const direction = keyMap[p.key];
             if (direction && !this.scene.isTransitioning) {
-                console.log(direction);
                 this.transition.startTransition(direction);
             }
         };
@@ -154,10 +167,16 @@ export class CanvasManager {
         this.stars.push(new Star(this.p.random(this.p.width), this.p.random(this.p.height))); 
     }
 
+    logFact(content) {
+        const log = document.getElementById('factLog');
+        const time = new Date().toLocaleString();
+        log.innerHTML += `<div>${time} : ${content}</div>`;
+        log.scrollTop = log.scrollHeight;
+    } 
 
     destroy() {
         if (this.p) {
-            this.p.remove(); // Properly destroys the canvas and stops draw loop
+            this.p.remove(); 
             this.p = null;
         }
     }

@@ -7,8 +7,7 @@ import { Router } from "./Controller/routerManager";
 import Parallax from "parallax-js";
 
 
-class Main
-{
+class Main {
     constructor() {
         this._router = new Router();
         // const uiManager = new UIManager();
@@ -29,12 +28,12 @@ class Main
         // }
         // });
         var scene = document.getElementById('paraBg');
-        var parallaxInstance = new Parallax(scene,{
+        new Parallax(scene, {
             relativeInput: true,
             clipRelativeInput: false,
             hoverOnly: false,
-
         });
+
     }
 
 }

@@ -1,14 +1,20 @@
 import { SceneManager } from "./sceneManager";
 
 export class TransitionManager {
-  constructor(p, currentScene) {
+  constructor(p, currentScene, player) {
     this.p = p;
+    this.player = player;
     this.currentScene = currentScene;
     this.nextScene = null;
     this.transitioning = false;
     this.direction = null;
     this.progress = 0;
     this.duration = 60;
+    document.getElementById("moveLeft").addEventListener("click", () => this.startTransition('left'));
+    document.getElementById("moveUp").addEventListener("click", () => this.startTransition('up'));
+    document.getElementById("moveRight").addEventListener("click", () => this.startTransition('right'));
+    document.getElementById("moveDown").addEventListener("click", () => this.startTransition('down'));
+
   }
 
   startTransition(direction) {
@@ -18,8 +24,7 @@ export class TransitionManager {
     this.transitioning = true;
     this.progress = 0;
 
-    this.nextScene = new SceneManager(this.p);
-    // this.nextScene.loadAssets();
+    this.nextScene = new SceneManager(this.p,this.player);
 
   }
 

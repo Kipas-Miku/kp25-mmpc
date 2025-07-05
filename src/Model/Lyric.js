@@ -72,7 +72,7 @@ export class Lyric {
     const p = this.p;
     p.push();
     p.textAlign(p.CENTER, p.CENTER);
-    p.textSize(48);
+    p.textSize(36);
     p.fill(255, this.alpha);
     p.textFont("Noto Sans JP")
 
@@ -89,19 +89,20 @@ export class Lyric {
       p.text(char.text, currentX, this.y);
 
       currentX += spacing;
-
       if (
         char.pos === "N" ||    // Noun
         char.pos === "PN" ||   // Pronoun
         char.pos === "X"       // Other symbol-like words
       ) {
-        currentX += spacing * 0.5;  // Add extra gap after these POS
+        currentX += spacing * 0.2;  // Add extra gap after these POS
       }
 
       // Also optionally: add a tiny space after English words
       if (char.isEnglish && char.isLastInWord) {
-        currentX += spacing * 0.2;
-      }
+        currentX += spacing * 0.5;
+      }else if (char.isFirstInWord && char.isEnglish) {
+        currentX += spacing * 0.3;
+    }
     });
 
     p.pop();

@@ -42,6 +42,6 @@ export class Vocastar {
     }
 
     isClicked(mx, my) {
-        return this.p.dist(mx, my, this.x, this.y) < this.size / 2;
+        return this.p.dist(mx, 0, this.x, 0) < this.size / 2;
     }
 }

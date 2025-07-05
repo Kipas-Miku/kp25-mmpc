@@ -1,4 +1,17 @@
 export const songs = [
+
+  {
+    title: "ストリートライト",
+    artist: "加賀(ネギシャワーP)",
+    songUrl: "https://piapro.jp/t/ULcJ/20250205120202",
+    video: {
+      beatId: 4694275,
+      chordId: 2830730,
+      repetitiveSegmentId: 2946478,
+      lyricId: 67810,
+      lyricDiffId: 20654
+    }
+  },
   {
     title: "アリフレーション",
     artist: "雨良 Amala",

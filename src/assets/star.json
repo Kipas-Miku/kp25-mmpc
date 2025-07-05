@@ -1,0 +1,8 @@
+{
+  "stars": [
+    { "name": "Sun", "type": "G-type main-sequence star", "fact": "It accounts for 99.8% of the solar system’s mass." },
+    { "name": "Betelgeuse", "type": "Red supergiant", "fact": "It would engulf Jupiter’s orbit if placed at the Sun’s position." },
+    { "name": "Sirius", "type": "Binary star (A-type + white dwarf)", "fact": "It's the brightest star in the night sky." },
+    { "name": "Proxima Centauri", "type": "Red dwarf", "fact": "The closest star to Earth after the Sun." }
+  ]
+}
